@@ -40,15 +40,16 @@ class Index extends Component {
       this.showMsgToast('获取资源失败')
       return
     }
-    this.getSongInfo(currentSong.id)
+    this.getSongInfo(currentSong.id, () => {
+      this.audio.src = url
+      if (!restore) {
+        this.audio.seek(0)
+        this.audio.play()
+        this.props.dispatch(Action('main/updateState', {playState: !this.audio.paused}))
+      }
+    })
     this.getLyric(currentSong.id)
     // this.audio.crossOrigin = 'anonymous'
-    this.audio.src = url
-    if (!restore) {
-      this.audio.seek(0)
-      this.audio.play()
-      this.props.dispatch(Action('main/updateState', {playState: !this.audio.paused}))
-    }
   }
   // 歌曲播放
   playSongById(id, restore) {
@@ -56,9 +57,9 @@ class Index extends Component {
     dispatch(Action('main/fetchSongById', {id, restore}))
   }
   // 获取歌曲信息
-  getSongInfo(id) {
+  getSongInfo(id, callback) {
     const { dispatch } = this.props
-    dispatch(Action('main/fetchSongInfo', {id}))
+    dispatch(Action('main/fetchSongInfo', {id, callback}))
   }
   // 获取歌词
   getLyric(id) {

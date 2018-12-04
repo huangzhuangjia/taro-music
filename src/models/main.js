@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro'
 import modelExtend from 'dva-model-extend'
 import { model } from '../utils/model'
 import Action from '../utils/action'
@@ -41,11 +42,13 @@ function formatLyric(lrc) {
   return lrcList
 }
 // 初始化背景音乐信息
-function initBackgroundAudioInfo(songObj) {
+function initBackgroundAudioInfo(songObj, callback) {
+
   let audio = getGlobalData('backgroundAudioManager')
   audio.title = songObj.name
   audio.singer = songObj.ar
   audio.coverImgUrl = songObj.cover
+  callback && callback()
 }
 
 export default modelExtend(model,  {
@@ -100,14 +103,14 @@ export default modelExtend(model,  {
         console.error(e)
       }
     },
-    *fetchSongInfo({payload}, {select, call, put}) {
+    *fetchSongInfo({ payload }, { select, call, put }) {
       try {
         const { main } = yield select(state => state)
-        const { id } = payload
+        const { id, callback } = payload
         const res = yield call(fetchSongInfo, { ids: id })
         let songData = {}
         songData = res.songs[0]
-        yield put(Action('updateState', {songInfo: songData}))
+        yield put(Action('updateState', { songInfo: songData }))
         if (songData.name && songData.ar[0].name) {
           let playList = main.playList || []
           let songObj = {
@@ -117,7 +120,7 @@ export default modelExtend(model,  {
             cover: songData.al.picUrl,
             from: 'online',
           };
-          initBackgroundAudioInfo(songObj)
+          initBackgroundAudioInfo(songObj, callback)
           if (!playList.map(i => i.id).includes(id)) {
             playList.unshift(songObj)
             yield put(Action('updateState', {playList}))
