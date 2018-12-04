@@ -1,0 +1,91 @@
+$theme: #666;
+.newest {
+  width: 100%;
+  height: 100%;
+  padding: 10px 0px 18px;
+  .newest-banner {
+    width: 100%;
+    height: 25vh;
+    overflow: hidden;
+    position: relative;
+    display: none;
+    .bg {
+      display: block;
+      width: 100%;
+    }
+  }
+  .item-list {
+    width: 100%;
+    height: calc(100% - 18vw);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 68px;
+    padding-top: 10px;
+    .song-itembox {
+      width: 100%;
+      padding: 16px 45px;
+      display: flex;
+      cursor: pointer;
+      -webkit-app-region: no-drag;
+      transition: all 250ms ease;
+      position: relative;
+      box-sizing: border-box;
+      &:hover {
+        background: #F0F0F0;
+      }
+      .cover {
+        width: 90rpx;
+        height: 90rpx;
+        position: relative;
+        image {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .info {
+        width: calc(100% - 38px);
+        padding: 0px 0px 0px 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .name {
+          font-size: 28px;
+          line-height: 1.6;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .singer {
+          font-size: 24px;
+          color: #999;
+          display: flex;
+          i {
+            margin-right: 4px;
+            align-items: center;
+          }
+        }
+      }
+    }
+    .song-itembox-active{
+      .info {
+        width: calc(100% - 70px);
+      }
+      &:before {
+        content: '\e6a9';
+        font-family: iconfont;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        right: 16px;
+        top: 0px;
+        height: 100%;
+        color: $theme;
+        font-size: 48px;
+      }
+      position: relative;
+      background: #F0F0F0;
+    }
+  }
+}

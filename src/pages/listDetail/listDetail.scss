@@ -1,0 +1,150 @@
+$theme: #666;
+.listDetail-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  .windowsHead {
+    position: fixed;
+  }
+  .wrap {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+  }
+  .listCoverBanner {
+    width: 100%;
+    height: 48vh;
+    position: relative;
+    .play {
+      position: absolute;
+      right: 0px;
+      bottom: -55px;
+      width: 3rem;
+      height: 3rem;
+      background: $theme;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      padding-left: 4px;
+      font-size: 55px;
+      cursor: pointer;
+      -webkit-app-region: no-drag;
+      z-index: 9;
+      &:hover{
+        &:after{
+          transform: translate(0%, -50%);
+          opacity: 1;
+        }
+      }
+    }
+    .cover {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      image {
+        display: block;
+        width: 100%;
+      }
+    }
+  }
+  .listInfo {
+    width: 100%;
+    padding: 60px 60px 30px;
+    box-sizing:border-box;
+    .name {
+      font-size: 28px;
+      font-weight: bold;
+      line-height: 1.6;
+    }
+    .desc {
+      font-size: 24px;
+      color: #999;
+      margin-top: 12px;
+      line-height: 1.6;
+      max-height: 76px;
+      overflow: hidden;
+    }
+  }
+  .song-list {
+    width: 100%;
+    padding-bottom: 160px;
+    .song {
+      width: 100%;
+      padding: 0px 0px;
+      display: flex;
+      -webkit-app-region: no-drag;
+      position: relative;
+      transition: all 250ms ease;
+      &:hover {
+        background: #FCFCFC;
+        .key {
+          color: $theme;
+        }
+      }
+      &:last-child {
+        .r {
+          border-bottom: none;
+        }
+      }
+      .key {
+        width: 135px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ECECEC;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .r {
+        width: calc(100% - 60px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        border-bottom: solid 1px #FAFAFA;
+        padding: 20px 30px 20px 0px;
+        cursor: pointer;
+        .name {
+          font-size: 28px;
+          color: #333;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: normal;
+        }
+        .singer {
+          font-size: 24px;
+          color: #999;
+          margin-top: 4px;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: normal;
+        }
+      }
+    }
+    .song-active{
+      &:before {
+        content: '\e6a9';
+        font-family: iconfont;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        right: 26px;
+        top: 0px;
+        height: 100%;
+        color: $theme;
+        font-size: 45px;
+      }
+      background: #F0F0F0;
+      &:hover {
+        background: #F0F0F0;
+      }
+      .key {
+        color: $theme;
+      }
+    }
+  }
+}

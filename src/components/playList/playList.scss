@@ -1,0 +1,119 @@
+.play-list-dialog{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0px;
+  top: -200vh;
+  z-index: 1000;
+  .mask{
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.3);
+    opacity: 0;
+    transition: all 250ms ease-in-out;
+    -webkit-app-region: no-drag;
+  }
+  .list-wrap{
+    width: 100%;
+    height: 60vh;
+    position: absolute;
+    left: 0px;
+    bottom: -60vh;
+    background: #FFF;
+    transition: all 250ms ease-in-out;
+    -webkit-app-region: no-drag;
+    .list-wrap-head{
+      width: 100%;
+      height: 80px;
+      display: flex;
+      padding: 0px 28px;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: solid 2px #F9F9F9;
+      box-sizing:border-box;
+      .label{
+        font-size: 24px;
+        display: flex;
+        .iconfont{
+          font-size: 32px;
+          margin-right: 4px;
+        }
+      }
+      .clear{
+        font-size: 32px;
+        color: #999;
+        cursor: pointer;
+      }
+    }
+    .list-item{
+      width: 100%;
+      height: calc(100% - 40px);
+      box-sizing:border-box;
+      padding-bottom:110rpx;
+      .row{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: default;
+        transition: all 250ms ease;
+        .info{
+          display: flex;
+          align-items: center;
+          width: calc(100% - 50px);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 24px;
+          padding: 15px 0px 15px 28px;
+          span{
+            font-size: 24px;
+            color: #999;
+          }
+        }
+        .del{
+          width: 90px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 26px;
+          color: #999;
+        }
+      }
+      .row-playing{
+        background: #F0F0F0;
+        .info{
+          span{
+            font-weight: bold;
+          }
+          &:before{
+            content: '\e6a9';
+            font-family: iconfont;
+            font-weight: normal;
+            margin-right: 20px;
+            font-size: 30px;
+          }
+        }
+      }
+    }
+    .list-wrap-foot {
+      position: absolute;
+      bottom: 0;
+      padding: 15px;
+      text-align: center;
+      width: 100%;
+      border-top: solid 1px #F9F9F9;
+      cursor: pointer;
+      font-size: 24px;
+      background: #fff;
+    }
+  }
+  .mask-active{
+    opacity: 1;
+  }
+  .list-wrap-active{
+    bottom: 0px;
+  }
+}
+.play-list-dialog-active{
+  top: 0px;
+}
