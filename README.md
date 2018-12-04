@@ -8,7 +8,7 @@
 
 ## Usage
 
-> 在运行项目之前需要先在本地运行 [NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/) 项目，开启获取歌曲服务，默认端口是3000
+> 本项目已经使用了线上api接口，所以无需运行后台也可以获取数据，当然你也可以在本地运行 [NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/) 项目，开启获取歌曲服务，默认端口是3000
 
 ```bash
 $ git clone git@github.com:Binaryify/NeteaseCloudMusicApi.git
