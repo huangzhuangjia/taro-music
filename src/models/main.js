@@ -85,9 +85,11 @@ export default modelExtend(model,  {
     }
   },
   effects: {
-    *fetchSongById({payload}, {call, put}) {
+    *fetchSongById({ payload }, { select, call, put }) {
       try {
-        const {id, restore} = payload
+        const { id, restore } = payload
+        const { currentSong, playState } = yield select(state => state.main)
+        if (currentSong.id === id && playState) return
         const res = yield call(fetchMusicUrl, {id})
         if (res.data.length > 0) {
           yield put(Action('updateState', {currentSong: res.data[0]}))
