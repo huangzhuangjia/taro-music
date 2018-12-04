@@ -16,7 +16,7 @@ $ cd NeteaseCloudMusicApi && npm install
 $ npm start
 ```
 
->然后运行本项目，使用 [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html) 导入项目（本项目根目录进行导入）,用微信开发者工具注意事项可查看: https://nervjs.github.io/taro/docs/before-dev-remind.html
+>然后运行本项目，使用 [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html) 导入项目（本项目根目录进行导入），开发前注意事项可查看: https://nervjs.github.io/taro/docs/before-dev-remind.html
 
 ```bash
 # git clone
