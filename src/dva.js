@@ -6,7 +6,9 @@ let app, store, dispatch
 
 function createApp(options) {
   const { models } = options
-  options.onAction = [createLogger()]
+  if (process.env.NODE_ENV === 'development') {
+    options.onAction = [createLogger()]
+  }
   app = create({
     ...options
   })

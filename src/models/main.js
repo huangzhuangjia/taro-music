@@ -43,7 +43,6 @@ function formatLyric(lrc) {
 }
 // 初始化背景音乐信息
 function initBackgroundAudioInfo(songObj, callback) {
-
   let audio = getGlobalData('backgroundAudioManager')
   audio.title = songObj.name
   audio.singer = songObj.ar
