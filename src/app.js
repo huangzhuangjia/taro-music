@@ -6,7 +6,9 @@ import dva from './dva'
 import models from './models'
 import Index from './pages/index'
 
-import { setGlobalData } from './utils'
+import { setGlobalData, getCacheData } from './utils'
+import eventEmitter from './utils/eventEmitter'
+import * as Events from './constants/event-types'
 
 import './app.scss'
 import './assets/icon.css'
@@ -40,9 +42,12 @@ class App extends Component {
     setGlobalData('backgroundAudioManager', backgroundAudioManager)
   }
 
-  componentDidShow () {}
+  componentDidShow() {}
 
-  componentDidHide () {}
+  componentDidHide() {
+    // 小程序退出时主动暂停音乐
+    eventEmitter.trigger(Events.HIDE, backgroundAudioManager)
+  }
 
   componentCatchError () {}
 

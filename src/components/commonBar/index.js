@@ -35,7 +35,8 @@ class Index extends Component {
     this.state = {
       playListState: false,
       playList: [],
-      transform: 'animation: imgRotate 12s linear infinite;'
+      transform: 'animation: imgRotate 12s linear infinite;',
+      restore: false
     }
     this.audio = null
   }
@@ -54,8 +55,8 @@ class Index extends Component {
       return
     }
     this.getSongInfo(currentSong.id, () => {
-      this.audio.src = url
       if (!restore) {
+        this.audio.src = url
         this.audio.seek(0)
         this.audio.play()
         this.props.onUpdateState('main', { playState: !this.audio.paused })
@@ -88,8 +89,15 @@ class Index extends Component {
   }
   //播放切换
   switchPlay(state) {
-    let { onUpdateState } = this.props
-    if (this.audio && this.audio.src && this.audio.src.indexOf('/null') == -1) {
+    let { onUpdateState, main } = this.props
+    let { restore } = this.state
+    if (restore) {
+      this.setState({
+        restore: false
+      })
+      this.audio.src = main.currentSong.url
+      onUpdateState('main', { playState: true })
+    } else if (this.audio && this.audio.src && this.audio.src.indexOf('/null') == -1) {
       state ? this.audio.play() : this.audio.pause()
       onUpdateState('main', { playState: state })
     }
@@ -124,20 +132,10 @@ class Index extends Component {
         curSong = data
       }
     })
+    this.setState({
+      restore: true
+    })
     this.playSongById(curSong.id, true)
-    let currentTime = getCacheData('currentTime') || 0
-    if(currentTime > 0) {
-      this.audio.seek(currentTime)
-      this.timeupdate()
-    }
-  }
-  // 播放时间更新进度加载
-  timeupdate() {
-    // let currentTime = this.audio.currentTime
-    // let audioDuration = this.audio.duration
-    // let playPercent = currentTime / audioDuration * 100
-    // this.progress('.wrapper >>> .common-bar-wrapper >>> #progress', playPercent)
-    // eventEmitter.trigger(Events.PLAYPERCENT)
   }
   // 切换下一首歌曲
   playNext(type, key) {
@@ -189,8 +187,7 @@ class Index extends Component {
   }
   // 重置
   resetPlayer() {
-    const { onUpdateState } = this.props
-    onUpdateState('main', {
+    this.props.onUpdateState('main', {
       currentSong: {},
       songInfo: {},
       playState: false
@@ -243,10 +240,9 @@ class Index extends Component {
   }
    // 创建随机播放列表
   createShuffleList() {
-    const { onUpdateState } = this.props
     let playList = getCacheData('playList')
     let shuffleList = shuffleArray(playList || [], { copy: true })
-    onUpdateState('main', { shuffleList })
+    this.props.onUpdateState('main', { shuffleList })
   }
   listToPlay(data) {
     this.playSongById(data.id)
@@ -275,34 +271,13 @@ class Index extends Component {
       duration: dur || 2000
     })
   }
-  // 绘制圆形进度条方法
-  run(c, w, h) {
-    let num = (2 * Math.PI / 100 * c) - 0.5 * Math.PI
-    this.canvas.setStrokeStyle("#666")
-    this.canvas.setLineWidth("2")
-    this.canvas.setLineCap("round")
-    this.canvas.beginPath()
-    this.canvas.arc(w, h, w-0.8, -0.5 * Math.PI, num) //每个间隔绘制的弧度
-    this.canvas.stroke()
-    this.canvas.draw()
-  }
-  // 环形进度条进度显示
-  progress(id, percent) {
-    // 获取ControlBar组件 Canvas
-    this.canvas = Taro.createCanvasContext('progress', this.refs.ControlBar.$scope)
-    this.query.select(id).boundingClientRect(rect => { //监听canvas的宽高
-      let w = parseInt(rect.width / 2) //获取canvas宽的的一半
-      let h = parseInt(rect.height / 2) //获取canvas高的一半，
-      this.run(percent, w, h)
-    }).exec()
+  onHide(audio) {
+    this.audio = audio
+    this.switchPlay(false)
   }
   initAudioManager() {
     // 获取全局创建的一个系统背景音频管理对象，防止重复播放
     this.audio = getGlobalData('backgroundAudioManager')
-    // 背景音频播放进度更新事件
-    // this.audio.onTimeUpdate(() => {
-    //   this.timeupdate()
-    // })
     // 音乐停止
     this.audio.onEnded(() => {
       this.playNext(1)
@@ -360,6 +335,11 @@ class Index extends Component {
     eventEmitter.on(Events.SWITCHPLAYLIST, () => {
       this.targetingCur()
     })
+    // 小程序退出
+    eventEmitter.off(Events.HIDE)
+    eventEmitter.on(Events.HIDE, (audio) => {
+      this.onHide(audio)
+    })
   }
   componentWillMount() {
     let playOrder = getCacheData('playOrder') || 0,
@@ -378,10 +358,10 @@ class Index extends Component {
     this.query = Taro.createSelectorQuery()
     this.initAudioManager()
     this.initEvents()
-    // let currentSongId = getCacheData('currentSongId')
-    // if(currentSongId) {
-    //   this.restore(currentSongId)
-    // }
+    let currentSongId = getCacheData('currentSongId')
+    if(currentSongId) {
+      this.restore(currentSongId)
+    }
   }
   render() {
     let { main } = this.props

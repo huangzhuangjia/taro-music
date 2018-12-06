@@ -119,15 +119,7 @@ class PlayDetail extends Component {
     }
   }
   switchPlay(state) {
-    let audioSrc = this.audio.src
-    if (this.audio && audioSrc && audioSrc.indexOf('/null') == -1) {
-      if (state) {
-        this.audio.play()
-      } else {
-        this.audio.pause()
-      }
-      this.props.onUpdateState('main', { playState: state })
-    }
+    eventEmitter.trigger(Events.SWITCHPLAY, state)
   }
   // 切换播放类型
   switchOrder() {
