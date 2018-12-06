@@ -103,7 +103,6 @@ export default modelExtend(model,  {
       }
     },
     *fetchSongInfo({ payload }, { select, call, put }) {
-      console.log(payload)
       try {
         const { main } = yield select(state => state)
         const { id, callback } = payload
