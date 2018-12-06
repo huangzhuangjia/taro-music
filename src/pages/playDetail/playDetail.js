@@ -4,16 +4,20 @@ import { connect } from '@tarojs/redux'
 import eventEmitter from '../../utils/eventEmitter'
 import * as Events from '../../constants/event-types'
 import { getGlobalData } from '../../utils'
-import Action from '../../utils/action'
+import { updateState } from '../../actions'
 
 import coverImg from '../../assets/image/logo.png'
 import './playDetail.scss'
 
 const playOrderIcon = ['icon-list-loop', 'icon-single-loop', 'icon-bofangye-caozuolan-suijibofang']
 
-@connect(({ main }) => ({
+const mapStateToProps = ({ main }) => ({
   main
-}))
+})
+const mapDispatchToProps = ({
+  onUpdateState: updateState
+})
+@connect(mapStateToProps, mapDispatchToProps)
 class PlayDetail extends Component {
   static options = {
     addGlobalClass: true
@@ -41,7 +45,7 @@ class PlayDetail extends Component {
     }
   }
   goBack() {
-    this.props.dispatch(Action('main/updateState', {UIPage: false}))
+    this.props.onUpdateState('main', { UIPage: false })
   }
   // 实时获取音频播放进度
   getAudioPlayPercent() {
@@ -122,7 +126,7 @@ class PlayDetail extends Component {
       } else {
         this.audio.pause()
       }
-      this.props.dispatch(Action('main/updateState', {playState: state}))
+      this.props.onUpdateState('main', { playState: state })
     }
   }
   // 切换播放类型

@@ -1,14 +1,19 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, ScrollView, Text, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import Action from '../../utils/action'
+import { fetchAlbumList, updateState } from '../../actions'
 
 import './album.scss'
 
-@connect(({ album, loading }) => ({
+const mapStateToProps = ({ album, loading }) => ({
   ...album,
   loading: loading.effects['album/fetchAlbumList']
-}))
+})
+const mapDispatchToProps = ({
+  onFetchAlbumList:fetchAlbumList,
+  onUpdateState: updateState
+})
+@connect(mapStateToProps, mapDispatchToProps)
 class Album extends Component {
   static options = {
     addGlobalClass: true
@@ -25,14 +30,13 @@ class Album extends Component {
    */
   fetchAlbum(callback, initOffset, isInit, isUnLoad) {
     if (isUnLoad) return
-    const { dispatch } = this.props
-    dispatch(Action('album/fetchAlbumList', { callback, initOffset, isInit }))
+    this.props.onFetchAlbumList({ callback, initOffset, isInit })
   }
 
   loadingMore() {
-    const { dispatch, loading, offset } = this.props
+    let { onUpdateState, loading, offset } = this.props
     if (loading) return
-    dispatch(Action('album/updateState', { offset: offset + 1 }))
+    onUpdateState('album', { offset: offset + 1 })
     setTimeout(() => {
       this.fetchAlbum()
     })

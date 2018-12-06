@@ -2,13 +2,18 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, ScrollView, Text, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import { getCacheData } from '../../utils'
-import Action from '../../utils/action'
+import { fetchRecommendList, updateState } from '../../actions'
 
 import './recommend.scss'
 
-@connect(({ recommend }) => ({
+const mapStateToProps = ({ recommend }) => ({
   recommendList: recommend.recommendList
-}))
+})
+const mapDispatchToProps = ({
+  onFetchRecommendList: fetchRecommendList,
+  onUpdateState: updateState
+})
+@connect(mapStateToProps, mapDispatchToProps)
 class Recommend extends Component {
   static options = {
     addGlobalClass: true
@@ -20,14 +25,13 @@ class Recommend extends Component {
   getRecommendList() {
     let recommendList = getCacheData('recommendList')
     if (recommendList && recommendList.length > 0) {
-      this.props.dispatch(Action('recommend/updateState', {recommendList}))
+      this.props.onUpdateState('recommend', { recommendList })
     } else {
       this.fetchRecommendList()
     }
   }
   fetchRecommendList(callback) {
-    const { dispatch } = this.props
-    dispatch(Action('recommend/fetchRecommendList', {callback}))
+    this.props.onFetchRecommendList({ callback })
   }
 
   getPlayCount(num) {

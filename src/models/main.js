@@ -71,7 +71,7 @@ export default modelExtend(model,  {
     currentLyric: []
   },
   reducers: {
-    getShuffleList(state, {payload}) {
+    getShuffleList(state, { payload }) {
       const { item } = payload
       if (!item) return
       let shuffleList = state.shuffleList,
@@ -103,6 +103,7 @@ export default modelExtend(model,  {
       }
     },
     *fetchSongInfo({ payload }, { select, call, put }) {
+      console.log(payload)
       try {
         const { main } = yield select(state => state)
         const { id, callback } = payload

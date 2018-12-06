@@ -6,13 +6,17 @@ import eventEmitter from '../../utils/eventEmitter'
 import * as Events from '../../constants/event-types'
 import CommonBar from '../../components/commonBar'
 import PlayDetail from '../playDetail/playDetail'
-import Action from '../../utils/action'
+import { fetchSongById } from '../../actions'
 
 import './listDetail.scss'
 
-@connect(({ main }) => ({
+const mapStateToProps = ({ main }) => ({
   main
-}))
+})
+const mapDispatchToProps = ({
+  onFetchSongById: fetchSongById
+})
+@connect(mapStateToProps, mapDispatchToProps)
 class ListDetail extends Component {
   static options = {
     addGlobalClass: true
@@ -42,8 +46,7 @@ class ListDetail extends Component {
     })
   }
   playSongById(id, restore) {
-    const { dispatch } = this.props
-    dispatch(Action('main/fetchSongById', {id, restore}))
+    this.props.onFetchSongById({ id, restore })
   }
   scroll(event) {
     let top = event.detail.scrollTop

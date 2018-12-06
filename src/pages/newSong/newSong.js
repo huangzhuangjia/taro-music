@@ -3,13 +3,24 @@ import { View, Text, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import Action from '../../utils/action'
 import { getCacheData } from '../../utils'
+import {
+  fetchNewestList,
+  fetchSongById,
+  updateState
+} from '../../actions'
 
 import './newSong.scss'
 
-@connect(({ main, newSong }) => ({
+const mapStateToProps = ({ main, newSong }) => ({
   ...main,
   ...newSong
-}))
+})
+const mapDispatchToProps = ({
+  onFetchNewestList: fetchNewestList,
+  onFetchSongById: fetchSongById,
+  onUpdateState: updateState
+})
+@connect(mapStateToProps, mapDispatchToProps)
 class NewSong extends Component {
   static options = {
     addGlobalClass: true
@@ -18,19 +29,16 @@ class NewSong extends Component {
     super(...arguments)
   }
   getNewest() {
-    const { dispatch } = this.props
     let newestList = getCacheData('newSongList')
     if (newestList && newestList.length > 0) {
-      dispatch(Action('newSong/updateState', { newestList }))
+      this.props.onUpdateState('newSong', { newestList })
     }
   }
   fetchNewest(callback) {
-    const { dispatch } = this.props
-    dispatch(Action('newSong/fetchNewestList', { callback }))
+    this.props.onFetchNewestList({ callback })
   }
   playSongById(id, restore) {
-    const { dispatch } = this.props
-    dispatch(Action('main/fetchSongById', {id, restore}))
+    this.props.onFetchSongById({ id, restore })
   }
   render() {
     const { newestList, currentSong } = this.props

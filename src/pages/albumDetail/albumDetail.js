@@ -6,13 +6,17 @@ import * as Events from '../../constants/event-types'
 import { getAlbumDetail } from '../../services'
 import CommonBar from '../../components/commonBar'
 import PlayDetail from '../playDetail/playDetail'
-import Action from '../../utils/action'
+import { fetchSongById } from '../../actions'
 
 import '../listDetail/listDetail.scss'
 
-@connect(({ main }) => ({
+const mapStateToProps = ({ main }) => ({
   main
-}))
+})
+const mapDispatchToProps = ({
+  onFetchSongById: fetchSongById
+})
+@connect(mapStateToProps, mapDispatchToProps)
 class AlbumDetail extends Component {
   static options = {
     addGlobalClass: true
@@ -48,8 +52,7 @@ class AlbumDetail extends Component {
   }
 
   playSongById(id, restore) {
-    const { dispatch } = this.props
-    dispatch(Action('main/fetchSongById', {id, restore}))
+    this.props.onFetchSongById({ id, restore })
   }
 
   scroll(e) {

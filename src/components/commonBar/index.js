@@ -4,15 +4,28 @@ import { connect } from '@tarojs/redux'
 import shuffleArray from 'shuffle-array'
 import ControlBar from '../controlBar/controlBar'
 import PlayList from '../playList/playList'
-import Action from '../../utils/action'
 import eventEmitter from '../../utils/eventEmitter'
 import * as Events from '../../constants/event-types'
 import { getGlobalData, setCacheData, getCacheData } from '../../utils'
+import {
+  fetchSongInfo,
+  fetchSongById,
+  fetchLyric,
+  setShuffleList,
+  updateState
+} from '../../actions'
 
-@connect(({ main, loading }) => ({
-  main,
-  loading
-}))
+const mapStateToProps = ({ main }) => ({
+  main
+})
+const mapDispatchToProps = ({
+  onFetchSongInfo: fetchSongInfo,
+  onFetchSongById: fetchSongById,
+  onFetchLyric: fetchLyric,
+  onSetShuffleList: setShuffleList,
+  onUpdateState: updateState
+})
+@connect(mapStateToProps, mapDispatchToProps)
 class Index extends Component {
   static options = {
     addGlobalClass: true
@@ -27,10 +40,10 @@ class Index extends Component {
     this.audio = null
   }
   navigateTo(url) {
-    Taro.navigateTo({url: url})
+    Taro.navigateTo({ url: url })
   }
   toUIPage() {
-    this.props.dispatch(Action('main/updateState', {UIPage: true}))
+    this.props.onUpdateState('main', { UIPage: true })
   }
   // 初始化播放器
   initAudio(restore) {
@@ -45,30 +58,26 @@ class Index extends Component {
       if (!restore) {
         this.audio.seek(0)
         this.audio.play()
-        this.props.dispatch(Action('main/updateState', {playState: !this.audio.paused}))
+        this.props.onUpdateState('main', { playState: !this.audio.paused })
       }
     })
     this.getLyric(currentSong.id)
-    // this.audio.crossOrigin = 'anonymous'
   }
   // 歌曲播放
   playSongById(id, restore) {
-    const { dispatch } = this.props
-    dispatch(Action('main/fetchSongById', {id, restore}))
+    this.props.onFetchSongById({id, restore})
   }
   // 获取歌曲信息
   getSongInfo(id, callback) {
-    const { dispatch } = this.props
-    dispatch(Action('main/fetchSongInfo', {id, callback}))
+    this.props.onFetchSongInfo({id, callback})
   }
   // 获取歌词
   getLyric(id) {
-    const { dispatch } = this.props
-    dispatch(Action('main/fetchLyric', {id}))
+    this.props.onFetchLyric({id})
   }
   // 随机插入播放列表
   insertToShuffleList(item) {
-    this.props.dispatch(Action('main/getShuffleList', {item}))
+    this.props.onSetShuffleList({item})
   }
   // 保存当前列表信息在本地
   savePlayList(playList) {
@@ -79,15 +88,16 @@ class Index extends Component {
   }
   //播放切换
   switchPlay(state) {
-    let { dispatch } = this.props
+    let { onUpdateState } = this.props
     if (this.audio && this.audio.src && this.audio.src.indexOf('/null') == -1) {
       state ? this.audio.play() : this.audio.pause()
-      dispatch(Action('main/updateState', {playState: state}))
+      onUpdateState('main', { playState: state })
     }
   }
   // 添加播放列表
   batchAddToPlayList(item) {
-    let { dispatch, playList, shuffleList } = this.props
+    let { onUpdateState, main } = this.props,
+      { playList, shuffleList } = main
     let addItem = [],
         ids = playList.map(i => i.id)
     item.forEach((data) => {
@@ -96,10 +106,10 @@ class Index extends Component {
       }
     })
     playList = addItem.concat(playList)
-    dispatch(Action('main/updateState', {playList}))
+    onUpdateState('main', { playList })
     this.savePlayList(playList)
     this.showMsgToast('添加成功!')
-    if (shuffleList && shuffleList.length > 0) {
+    if (shuffleList.length > 0) {
       this.insertToShuffleList(addItem)
     } else {
       this.createShuffleList()
@@ -179,12 +189,12 @@ class Index extends Component {
   }
   // 重置
   resetPlayer() {
-    const { dispatch } = this.props
-    dispatch(Action('main/updateState', {
+    const { onUpdateState } = this.props
+    onUpdateState('main', {
       currentSong: {},
       songInfo: {},
       playState: false
-    }))
+    })
     this.audio.src = 'null'
   }
   // 点击显示当前播放列表
@@ -212,7 +222,7 @@ class Index extends Component {
   }
   // 切换播放列表的播放顺序
   switchOrder() {
-    const { main, dispatch } = this.props
+    const { main, onUpdateState } = this.props
     let playOrder = main.playOrder;
     if (playOrder === 0) {
       playOrder = 1;
@@ -222,7 +232,7 @@ class Index extends Component {
       playOrder = 0;
     }
     let tipItem = ['列表循环', '单曲循环', '随机播放']
-    dispatch(Action('main/updateState', {playOrder}))
+    onUpdateState('main', {playOrder})
     // 缓存数据
     setCacheData('playOrder', playOrder)
     this.showMsgToast(tipItem[playOrder])
@@ -233,17 +243,17 @@ class Index extends Component {
   }
    // 创建随机播放列表
   createShuffleList() {
-    const { dispatch } = this.props
+    const { onUpdateState } = this.props
     let playList = getCacheData('playList')
     let shuffleList = shuffleArray(playList || [], { copy: true })
-    dispatch(Action('main/updateState', {shuffleList}))
+    onUpdateState('main', { shuffleList })
   }
   listToPlay(data) {
     this.playSongById(data.id)
   }
   // 删除播放列表
   delList(id, key) {
-    const { main, dispatch } = this.props
+    const { main, onUpdateState } = this.props
     let playList = main.playList || [];
     if (id === 'all') {
       playList = []
@@ -252,7 +262,7 @@ class Index extends Component {
         playList.splice(key, 1)
       }
     }
-    dispatch(Action('main/updateState', {playList}))
+    onUpdateState('main', { playList })
     this.savePlayList(playList)
     if (main.currentSong.id === id) {
       this.playNext(1, key)
@@ -354,11 +364,11 @@ class Index extends Component {
   componentWillMount() {
     let playOrder = getCacheData('playOrder') || 0,
       playList = getCacheData('playList') || [],
-      { dispatch } = this.props
-    dispatch(Action('main/updateState', {
+      { onUpdateState } = this.props
+    onUpdateState('main', {
       playOrder,
       playList
-    }))
+    })
     this.savePlayList(playList)
     if (playOrder === 2) {
       this.createShuffleList();
