@@ -1,4 +1,3 @@
-import Taro from '@tarojs/taro'
 import modelExtend from 'dva-model-extend'
 import { model } from '../utils/model'
 import Action from '../utils/action'
@@ -75,8 +74,8 @@ export default modelExtend(model,  {
       const { item } = payload
       if (!item) return
       let shuffleList = state.shuffleList,
-          len = shuffleList.length;
-      (item || []).map((data) => {
+          len = shuffleList.length
+      ;(item || []).map((data) => {
         let insertPosition = Math.floor(len * Math.random())
         shuffleList = shuffleList.splice(insertPosition, 0, data)
       })
@@ -118,7 +117,7 @@ export default modelExtend(model,  {
             ar: songData.ar[0].name || '',
             cover: songData.al.picUrl,
             from: 'online',
-          };
+          }
           initBackgroundAudioInfo(songObj, callback)
           if (!playList.map(i => i.id).includes(id)) {
             playList.unshift(songObj)
