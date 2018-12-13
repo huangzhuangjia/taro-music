@@ -1,21 +1,29 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import CommonBar from '../../components/commonBar'
+import CommonBar from '../../components/commonBar/index'
 import PlayDetail from '../playDetail/playDetail'
 import Recommend from '../recommend/recommend'
 import NewSong from '../newSong/newSong'
 import Album from '../album/album'
-import { getCacheData, setCacheData } from '../../utils'
+import { getCacheData, setCacheData } from '../../utils/index'
 
 import './index.scss'
 
-const tabs = [
+interface TabItem {
+  id: number;
+  title: string
+}
+const tabs: Array<TabItem> = [
   {id: 0, title: '推荐歌单'},
   {id: 1, title: '最新单曲'},
   {id: 2, title: '新碟上架'},
 ]
 
-class Index extends Component {
+interface IndexStates {
+  activeTab: number;
+  tabs: Array<TabItem>
+}
+class Index extends Component<{}, IndexStates> {
   constructor() {
     super(...arguments)
     this.state = {

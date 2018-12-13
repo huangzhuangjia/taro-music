@@ -6,7 +6,7 @@ import ControlBar from '../controlBar/controlBar'
 import PlayList from '../playList/playList'
 import eventEmitter from '../../utils/eventEmitter'
 import * as Events from '../../constants/event-types'
-import { getGlobalData, setCacheData, getCacheData } from '../../utils'
+import { getGlobalData, setCacheData, getCacheData } from '../../utils/index'
 import {
   fetchSongInfo,
   fetchSongById,
@@ -14,6 +14,20 @@ import {
   setShuffleList,
   updateState
 } from '../../actions'
+
+interface CommonBarProps {
+  main: StoreState.MainState;
+  onFetchSongInfo: any;
+  onFetchSongById: any;
+  onFetchLyric: any;
+  onSetShuffleList: any;
+  onUpdateState: any;
+}
+interface CommonBarStates {
+  playListState: boolean;
+  playList: Array<StoreState.playItemState>;
+  transform: string;
+}
 
 const mapStateToProps = ({ main }) => ({
   main
@@ -25,11 +39,13 @@ const mapDispatchToProps = ({
   onSetShuffleList: setShuffleList,
   onUpdateState: updateState
 })
+
 @connect(mapStateToProps, mapDispatchToProps)
-class Index extends Component {
+class CommonBar extends Component<CommonBarProps, CommonBarStates> {
   static options = {
     addGlobalClass: true
   }
+  private audio = getGlobalData('backgroundAudioManager')
   constructor() {
     super(...arguments)
     this.state = {
@@ -37,18 +53,17 @@ class Index extends Component {
       playList: [],
       transform: 'animation: imgRotate 12s linear infinite;'
     }
-    this.audio = null
   }
-  navigateTo(url) {
+  navigateTo(url: string) {
     Taro.navigateTo({ url: url })
   }
   toUIPage() {
     this.props.onUpdateState('main', { UIPage: true })
   }
   // 初始化播放器
-  initAudio(restore) {
+  initAudio(restore: boolean) {
     let currentSong = this.props.main.currentSong
-    let url = currentSong.url
+    let url: string = currentSong.url
     if (!url) {
       this.showMsgToast('获取资源失败')
       return
@@ -64,11 +79,12 @@ class Index extends Component {
     this.getLyric(currentSong.id)
   }
   // 歌曲播放
-  playSongById(id, restore) {
+  playSongById(id: number | undefined, restore?: boolean) {
+    if (!id) return
     this.props.onFetchSongById({id, restore})
   }
   // 获取歌曲信息
-  getSongInfo(id, callback) {
+  getSongInfo(id: number, callback?: any) {
     this.props.onFetchSongInfo({id, callback})
   }
   // 获取歌词
@@ -76,18 +92,18 @@ class Index extends Component {
     this.props.onFetchLyric({id})
   }
   // 随机插入播放列表
-  insertToShuffleList(item) {
+  insertToShuffleList(item: Array<StoreState.playItemState>) {
     this.props.onSetShuffleList({item})
   }
   // 保存当前列表信息在本地
-  savePlayList(playList) {
+  savePlayList(playList: Array<StoreState.playItemState>) {
     this.setState({
       playList: playList
     })
     setCacheData('playList', playList)
   }
   //播放切换
-  switchPlay(state) {
+  switchPlay(state: boolean) {
     let { onUpdateState } = this.props
     if (this.audio && this.audio.src && this.audio.src.indexOf('/null') == -1) {
       state ? this.audio.play() : this.audio.pause()
@@ -95,12 +111,12 @@ class Index extends Component {
     }
   }
   // 添加播放列表
-  batchAddToPlayList(item) {
+  batchAddToPlayList(item: Array<StoreState.playItemState>) {
     let { onUpdateState, main } = this.props,
       { playList, shuffleList } = main
-    let addItem = [],
-        ids = playList.map(i => i.id)
-    item.forEach((data) => {
+    let addItem: Array<StoreState.playItemState> = [],
+        ids: Array<number | undefined> = playList.map(i => i.id)
+    item.forEach((data: any) => {
       if (!ids.includes(data.id)) {
         addItem.push(data)
       }
@@ -116,31 +132,22 @@ class Index extends Component {
     }
   }
   // 继续当前播放歌曲
-  restore(id) {
-    let playList = this.props.main.playList
-    let curSong = {}
+  restore(id: number) {
+    let playList: Array<StoreState.playItemState> = this.props.main.playList
+    let curSong: StoreState.playItemState = {}
     playList.map((data) => {
       if(data.id === id) {
         curSong = data
       }
     })
     this.playSongById(curSong.id, true)
-    let currentTime = getCacheData('currentTime') || 0
+    let currentTime: number = getCacheData('currentTime') || 0
     if(currentTime > 0) {
       this.audio.seek(currentTime)
-      this.timeupdate()
     }
   }
-  // 播放时间更新进度加载
-  timeupdate() {
-    // let currentTime = this.audio.currentTime
-    // let audioDuration = this.audio.duration
-    // let playPercent = currentTime / audioDuration * 100
-    // this.progress('.wrapper >>> .common-bar-wrapper >>> #progress', playPercent)
-    // eventEmitter.trigger(Events.PLAYPERCENT)
-  }
   // 切换下一首歌曲
-  playNext(type, key) {
+  playNext(type: number, key?: any) {
     let { main } = this.props
     let playOrder = main.playOrder,
       playList = main.playList,
@@ -252,7 +259,7 @@ class Index extends Component {
     this.playSongById(data.id)
   }
   // 删除播放列表
-  delList(id, key) {
+  delList(id: string, key: number) {
     const { main, onUpdateState } = this.props
     let playList = main.playList || [];
     if (id === 'all') {
@@ -268,41 +275,14 @@ class Index extends Component {
       this.playNext(1, key)
     }
   }
-  showMsgToast(title, dur) {
+  showMsgToast(title: string, dur?: number) {
     Taro.showToast({
       title: title,
       icon: 'none',
       duration: dur || 2000
     })
   }
-  // 绘制圆形进度条方法
-  run(c, w, h) {
-    let num = (2 * Math.PI / 100 * c) - 0.5 * Math.PI
-    this.canvas.setStrokeStyle("#666")
-    this.canvas.setLineWidth("2")
-    this.canvas.setLineCap("round")
-    this.canvas.beginPath()
-    this.canvas.arc(w, h, w-0.8, -0.5 * Math.PI, num) //每个间隔绘制的弧度
-    this.canvas.stroke()
-    this.canvas.draw()
-  }
-  // 环形进度条进度显示
-  progress(id, percent) {
-    // 获取ControlBar组件 Canvas
-    this.canvas = Taro.createCanvasContext('progress', this.refs.ControlBar.$scope)
-    this.query.select(id).boundingClientRect(rect => { //监听canvas的宽高
-      let w = parseInt(rect.width / 2) //获取canvas宽的的一半
-      let h = parseInt(rect.height / 2) //获取canvas高的一半，
-      this.run(percent, w, h)
-    }).exec()
-  }
   initAudioManager() {
-    // 获取全局创建的一个系统背景音频管理对象，防止重复播放
-    this.audio = getGlobalData('backgroundAudioManager')
-    // 背景音频播放进度更新事件
-    // this.audio.onTimeUpdate(() => {
-    //   this.timeupdate()
-    // })
     // 音乐停止
     this.audio.onEnded(() => {
       this.playNext(1)
@@ -421,4 +401,4 @@ class Index extends Component {
   }
 }
 
-export default Index
+export default CommonBar

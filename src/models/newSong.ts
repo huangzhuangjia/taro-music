@@ -2,7 +2,7 @@ import modelExtend from 'dva-model-extend'
 import { model } from '../utils/model'
 import Action from '../utils/action'
 import { setCacheData } from '../utils'
-import { getNewSong as fetchNewSong } from '../services'
+import { getNewSong as fetchNewSong } from '../services/index'
 
 export default modelExtend(model, {
   namespace: 'newSong',

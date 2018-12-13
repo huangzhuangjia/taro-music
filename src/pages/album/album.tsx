@@ -5,16 +5,24 @@ import { fetchAlbumList, updateState } from '../../actions'
 
 import './album.scss'
 
+interface AlbumProps {
+  onFetchAlbumList: any;
+  onUpdateState: any;
+  album: StoreState.AlbumState;
+  loading: boolean;
+}
+
 const mapStateToProps = ({ album, loading }) => ({
-  ...album,
+  album,
   loading: loading.effects['album/fetchAlbumList']
 })
 const mapDispatchToProps = ({
   onFetchAlbumList:fetchAlbumList,
   onUpdateState: updateState
 })
+
 @connect(mapStateToProps, mapDispatchToProps)
-class Album extends Component {
+class Album extends Component<AlbumProps, {}> {
   static options = {
     addGlobalClass: true
   }
@@ -28,13 +36,14 @@ class Album extends Component {
    * @param isInit 是否初始化
    * @param isUnLoad 是否不加载请求数据
    */
-  fetchAlbum(callback, initOffset, isInit, isUnLoad) {
+  fetchAlbum(callback?: any, initOffset?: number, isInit?: boolean, isUnLoad?: boolean) {
     if (isUnLoad) return
     this.props.onFetchAlbumList({ callback, initOffset, isInit })
   }
 
   loadingMore() {
-    let { onUpdateState, loading, offset } = this.props
+    let { onUpdateState, loading, album } = this.props,
+        { offset } = album
     if (loading) return
     onUpdateState('album', { offset: offset + 1 })
     setTimeout(() => {
@@ -47,7 +56,7 @@ class Album extends Component {
   }
 
   render() {
-    let { albumList, total } = this.props
+    let { albumList, total } = this.props.album
     return (
       <View className='album'>
         <ScrollView

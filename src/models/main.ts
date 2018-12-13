@@ -6,17 +6,17 @@ import {
   getSongInfo as fetchSongInfo,
   getMusicUrl as fetchMusicUrl,
   getLyric as fetchLyric
-} from '../services'
+} from '../services/index'
 import eventEmitter from '../utils/eventEmitter'
 import * as Events from '../constants/event-types'
 
 // 处理歌词
-function formatLyric(lrc) {
-  if (!lrc) return
+function formatLyric(lrc): Array<StoreState.Lyric> {
+  if (!lrc) return []
   let format = /\[(\d{2}:\d{2})\.\d{2,3}\](.*)/
   let outLrc = {}
-  let lrcList = []
-  let lrcArr = lrc.split('\n') || []
+  let lrcList: any[] = []
+  let lrcArr: Array<string> = lrc.split('\n') || []
 
   lrcArr.forEach(item => {
     let matchLrc = item.match(format)
@@ -106,12 +106,12 @@ export default modelExtend(model,  {
         const { main } = yield select(state => state)
         const { id, callback } = payload
         const res = yield call(fetchSongInfo, { ids: id })
-        let songData = {}
+        let songData: any = {}
         songData = res.songs[0]
         yield put(Action('updateState', { songInfo: songData }))
         if (songData.name && songData.ar[0].name) {
           let playList = main.playList || []
-          let songObj = {
+          let songObj: StoreState.playItemState = {
             id: id,
             name: songData.name || '',
             ar: songData.ar[0].name || '',

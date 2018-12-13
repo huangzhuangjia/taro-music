@@ -1,6 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
-import PropTypes from 'prop-types'
 
 import './playList.scss'
 
@@ -8,29 +7,20 @@ const playOrderMap = [
   {icon: 'icon-list-loop', name: '列表循环'},
   {icon: 'icon-single-loop', name: '单曲循环'},
   {icon: 'icon-bofangye-caozuolan-suijibofang', name: '随机播放'}
-];
-const propTypes = {
-  playList: PropTypes.array,
-  playListState: PropTypes.bool,
-  playOrder: PropTypes.number,
-  currentSong: PropTypes.object,
-  onClose: PropTypes.func,
-  switchOrder: PropTypes.func,
-  delList: PropTypes.func,
-  listToPlay: PropTypes.func,
-}
-const defaultProps = {
-  playList: [],
-  playListState: false,
-  playOrder: 0,
-  currentSong: {},
-  onClose: () => {},
-  onSwitchOrder: () => {},
-  onDelList: () => {},
-  onListToPlay: () => {},
+]
+
+interface PlayListProps {
+  playList: Array<StoreState.playItemState>,
+  playListState: boolean,
+  playOrder: number,
+  currentSong: any,
+  onClose: any,
+  onSwitchOrder: any,
+  onDelList: any,
+  onListToPlay: any,
 }
 
-class PlayList extends Component {
+class PlayList extends Component<PlayListProps, {}> {
   static options = {
     addGlobalClass: true
   }
@@ -78,6 +68,4 @@ class PlayList extends Component {
   }
 }
 
-PlayList.propTypes = propTypes
-PlayList.defaultProps = defaultProps
 export default PlayList

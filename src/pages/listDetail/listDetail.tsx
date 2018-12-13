@@ -1,62 +1,64 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, ScrollView, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
+import { getPlayList } from '../../services'
 import eventEmitter from '../../utils/eventEmitter'
 import * as Events from '../../constants/event-types'
-import { getAlbumDetail } from '../../services'
-import CommonBar from '../../components/commonBar'
+import CommonBar from '../../components/commonBar/index'
 import PlayDetail from '../playDetail/playDetail'
 import { fetchSongById } from '../../actions'
 
-import '../listDetail/listDetail.scss'
+import './listDetail.scss'
 
+interface ListDetailProps {
+  main: StoreState.MainState;
+  onFetchSongById: any
+}
+interface ListDetailStates {
+  listData: any;
+  scrollState: boolean
+}
 const mapStateToProps = ({ main }) => ({
   main
 })
 const mapDispatchToProps = ({
   onFetchSongById: fetchSongById
 })
+
 @connect(mapStateToProps, mapDispatchToProps)
-class AlbumDetail extends Component {
+class ListDetail extends Component<ListDetailProps, ListDetailStates> {
   static options = {
     addGlobalClass: true
   }
   constructor() {
     super(...arguments)
     this.state = {
-      album: {},
-      songs: [],
+      listData: {},
       scrollState: false,
     }
   }
-
   componentWillPreload(params) {
-    return getAlbumDetail({
+    return getPlayList({
       id: params.id
     })
   }
-
   componentDidMount() {
-    this.getListDetail()
+    this.fetchListDetail()
   }
-
-  getListDetail() {
+  fetchListDetail() {
     this.$preloadData.then(res => {
       if (res.code === 200) {
         this.setState({
-          songs: res.songs,
-          album: res.album,
+          listData: res.playlist,
         })
       }
     })
   }
-
   playSongById(id, restore) {
     this.props.onFetchSongById({ id, restore })
   }
-
-  scroll(e) {
-    let top = e.detail.scrollTop
+  scroll(event) {
+    let top = event.detail.scrollTop
     if (top > 200) {
       if (!this.state.scrollState) {
         this.setState({
@@ -73,53 +75,53 @@ class AlbumDetail extends Component {
   }
 
   goBack() {
-    Taro.redirectTo({url: '/pages/index/index?tab=2'})
+    Taro.redirectTo({url: '/pages/index/index'})
   }
-
   saveToList() {
-    let songs = this.state.songs
-    let item = []
-    songs.map((data) => {
+    let tracks = this.state.listData.tracks || []
+    let item: Array<StoreState.playItemState> = []
+    tracks.map((data) => {
       item.push({
         id: data.id,
         name: data.name || '',
         ar: data.ar[0].name || '',
+        cover: data.al.picUrl,
         from: 'online'
       })
     })
     eventEmitter.trigger(Events.BATCHADD, item)
   }
-
   render() {
-    let { songs, album, scrollState } = this.state,
-      currentSong = this.props.main.currentSong || {},
-      winHeight = Taro.getSystemInfoSync().windowHeight
+    let { listData, scrollState } = this.state
+    let tracks = listData.tracks || []
+    let currentSong = this.props.main.currentSong || {}
+    let winHeight = Taro.getSystemInfoSync().windowHeight
     return (
-      <View className='listDetail-wrapper'>
-        <View className={`windowsHead ${scrollState ? '' : 'windowsHead-transparent'}`}>
+      <View className='listDetail-wrapper wrapper'>
+        <View className={`windowsHead ${scrollState ? 'windowsHead-shadow' : 'windowsHead-transparent'}`}>
           <View className='back iconfont icon-fanhui' onClick={this.goBack.bind(this)}></View>
         </View>
         <ScrollView
-          className='wrap'
           scrollY
           scrollTop='0'
           onScroll={this.scroll}
+          className='wrap'
           style={{ height: `${winHeight}px` }}>
-        <View className='listCoverBanner'>
-          <View className='play iconfont icon-tianjiaqiyedangan' onClick={this.saveToList.bind(this)}></View>
+          <View className='listCoverBanner'>
+            <View className='play iconfont icon-tianjiaqiyedangan' onClick={this.saveToList.bind(this)}></View>
             <View className='cover'>
-              <Image src={album.picUrl || ''} mode='widthFix'></Image>
+              <Image src={listData.coverImgUrl || ''} mode='widthFix'></Image>
             </View>
           </View>
           <View className='listInfo'>
-            <View className='name'>{album.name || ''}</View>
-            <View className='desc'>{album.company || ''}</View>
+            <View className='name'>{listData.name || ''}</View>
+            <View className='desc'>{listData.description || ''}</View>
           </View>
           <View className='song-list'>
             {
-              songs.map((data, k) => {
+              tracks.map((data, k) => {
                 return (
-                  <View className={`song ${currentSong.id == data.id ? 'song-active' : ''}`} key={k} onClick={this.playSongById.bind(this, data.id)}>
+                  <View className={`song ${currentSong.id === data.id ? 'song-active' : ''}`} key={k} onClick={this.playSongById.bind(this, data.id)}>
                     <View className='key'>{k + 1}</View>
                     <View className='r'>
                       <View className='name'>{data.name || ''}</View>
@@ -138,4 +140,4 @@ class AlbumDetail extends Component {
   }
 }
 
-export default AlbumDetail
+export default ListDetail

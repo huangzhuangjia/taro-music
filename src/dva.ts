@@ -4,7 +4,7 @@ import createLoading from 'dva-loading'
 
 let app, store, dispatch
 
-function createApp(options) {
+function createApp(options?: any) {
   const { models } = options
   if (process.env.NODE_ENV === 'development') {
     options.onAction = [createLogger()]

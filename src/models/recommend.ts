@@ -1,7 +1,7 @@
 import modelExtend from 'dva-model-extend'
 import { model } from '../utils/model'
 import Action from '../utils/action'
-import { getRecommendList as fetchRecommendList } from '../services'
+import { getRecommendList as fetchRecommendList } from '../services/index'
 import { setCacheData } from '../utils'
 
 export default modelExtend(model, {

@@ -1,10 +1,16 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, ScrollView, Text, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import { getCacheData } from '../../utils'
+import { getCacheData } from '../../utils/index'
 import { fetchRecommendList, updateState } from '../../actions'
 
 import './recommend.scss'
+
+interface RecommendProps {
+  recommendList: any,
+  onFetchRecommendList: any,
+  onUpdateState: any
+}
 
 const mapStateToProps = ({ recommend }) => ({
   recommendList: recommend.recommendList
@@ -13,8 +19,9 @@ const mapDispatchToProps = ({
   onFetchRecommendList: fetchRecommendList,
   onUpdateState: updateState
 })
+
 @connect(mapStateToProps, mapDispatchToProps)
-class Recommend extends Component {
+class Recommend extends Component<RecommendProps, {}> {
   static options = {
     addGlobalClass: true
   }
@@ -30,7 +37,7 @@ class Recommend extends Component {
       this.fetchRecommendList()
     }
   }
-  fetchRecommendList(callback) {
+  fetchRecommendList(callback?: any) {
     this.props.onFetchRecommendList({ callback })
   }
 

@@ -1,10 +1,10 @@
 import '@tarojs/async-await'
-import Taro, { Component } from '@tarojs/taro'
+import Taro, { Component, Config } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
 
 import dva from './dva'
-import models from './models'
-import Index from './pages/index'
+import models from './models/index'
+import Index from './pages/index/index'
 
 import { setGlobalData } from './utils'
 
@@ -21,7 +21,7 @@ const backgroundAudioManager = Taro.getBackgroundAudioManager()
 
 class App extends Component {
 
-  config = {
+  config: Config = {
     pages: [
       'pages/index/index',
       'pages/listDetail/listDetail',

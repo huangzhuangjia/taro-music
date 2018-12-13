@@ -3,7 +3,7 @@ import { View, Text, Image, Slider } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import eventEmitter from '../../utils/eventEmitter'
 import * as Events from '../../constants/event-types'
-import { getGlobalData } from '../../utils'
+import { getGlobalData } from '../../utils/index'
 import { updateState } from '../../actions'
 
 import coverImg from '../../assets/image/logo.png'
@@ -11,17 +11,30 @@ import './playDetail.scss'
 
 const playOrderIcon = ['icon-list-loop', 'icon-single-loop', 'icon-bofangye-caozuolan-suijibofang']
 
+interface PlayDetailProps {
+  main: StoreState.MainState;
+  onUpdateState: any
+}
+interface PlayDetailStates {
+  percent: number | string;
+  duration: number | string;
+  currentTime: number | string;
+  transform: string;
+}
+
 const mapStateToProps = ({ main }) => ({
   main
 })
 const mapDispatchToProps = ({
   onUpdateState: updateState
 })
+
 @connect(mapStateToProps, mapDispatchToProps)
-class PlayDetail extends Component {
+class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
   static options = {
     addGlobalClass: true
   }
+  private audio = getGlobalData('backgroundAudioManager')
   constructor() {
     super(...arguments)
     this.state = {
@@ -30,10 +43,8 @@ class PlayDetail extends Component {
       currentTime: 0,
       transform: `animation: imgRotate 12s linear infinite;`
     }
-    this.audio = null
   }
   componentDidMount() {
-    this.audio = getGlobalData('backgroundAudioManager')
     this.audio.onTimeUpdate(() => {
       this.getAudioPlayPercent()
     })
@@ -50,9 +61,9 @@ class PlayDetail extends Component {
   // 实时获取音频播放进度
   getAudioPlayPercent() {
     if (this.audio && this.audio.src) {
-      let duration = this.audio.duration,
-        currentTime = this.audio.currentTime;
-      let playPercent = currentTime / duration;
+      let duration: number = this.audio.duration,
+        currentTime: number = this.audio.currentTime
+      let playPercent = currentTime / duration
       this.setState({
         duration: duration,
         currentTime: currentTime,
@@ -61,7 +72,7 @@ class PlayDetail extends Component {
     }
   }
   // 计算时间
-  formatSeconds(value) {
+  formatSeconds(value: any) {
     let theTime = parseInt(value || 0),
       theTime1 = 0,
       theTime2 = 0

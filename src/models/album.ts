@@ -2,7 +2,7 @@ import modelExtend from 'dva-model-extend'
 import { model } from '../utils/model'
 import Action from '../utils/action'
 import { setCacheData } from '../utils'
-import { getAlbumList as fetchAlbumList } from '../services'
+import { getAlbumList as fetchAlbumList } from '../services/index'
 
 export default modelExtend(model,  {
   namespace: 'album',

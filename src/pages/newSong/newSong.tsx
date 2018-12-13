@@ -1,8 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import Action from '../../utils/action'
-import { getCacheData } from '../../utils'
+import { getCacheData } from '../../utils/index'
 import {
   fetchNewestList,
   fetchSongById,
@@ -11,17 +10,25 @@ import {
 
 import './newSong.scss'
 
+interface NewSongProps {
+  main: StoreState.MainState;
+  newSong: StoreState.NewSongState;
+  onFetchNewestList: any;
+  onFetchSongById: any;
+  onUpdateState: any;
+}
 const mapStateToProps = ({ main, newSong }) => ({
-  ...main,
-  ...newSong
+  main,
+  newSong
 })
 const mapDispatchToProps = ({
   onFetchNewestList: fetchNewestList,
   onFetchSongById: fetchSongById,
   onUpdateState: updateState
 })
+
 @connect(mapStateToProps, mapDispatchToProps)
-class NewSong extends Component {
+class NewSong extends Component<NewSongProps, {}> {
   static options = {
     addGlobalClass: true
   }
@@ -41,7 +48,8 @@ class NewSong extends Component {
     this.props.onFetchSongById({ id, restore })
   }
   render() {
-    const { newestList, currentSong } = this.props
+    const { currentSong } = this.props.main,
+      { newestList } = this.props.newSong
 
     return (
       <View className='newest'>

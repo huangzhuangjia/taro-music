@@ -3,21 +3,21 @@ import qs from 'qs'
 import {
   BASE_URL,
   HTTP_ERROR
-} from '../config'
+} from '../config/index'
 
 /**
  * 检查http状态值
  * @param response
  * @returns {*}
  */
-function checkHttpStatus(response) {
+function checkHttpStatus(response: API.Response) {
   if (response.statusCode >= 200 && response.statusCode < 300) {
     Taro.hideNavigationBarLoading()
     return response.data
   }
 
   const message = HTTP_ERROR[response.statusCode] || `ERROR CODE: ${response.statusCode}`
-  const error = new Error(message)
+  const error: any = new Error(message)
   error.response = response
   throw error
 }
@@ -27,8 +27,8 @@ function checkHttpStatus(response) {
  * @param data
  * @returns {*}
  */
-function checkSuccess(data, resolve) {
-  if (typeof data === 'string' && data instanceof ArrayBuffer) {
+function checkSuccess(data: any, resolve) {
+  if (data instanceof ArrayBuffer && typeof data === 'string') {
     return data
   }
 
@@ -39,7 +39,7 @@ function checkSuccess(data, resolve) {
     return resolve(data)
   }
 
-  const error = new Error(data.message || '服务端返回异常')
+  const error: any = new Error(data.message || '服务端返回异常')
   error.data = data
   throw error
 }
@@ -59,14 +59,14 @@ function throwError(error, reject) {
 }
 
 export default {
-  request(options, method = 'GET') {
+  request(options: any, method?: string) {
     const { url } = options
 
     return new Promise((resolve, reject) => {
       Taro.showNavigationBarLoading()
       Taro.request({
         ...options,
-        method: method,
+        method: method || 'GET',
         url: `${BASE_URL}${url}`,
         header: {
           'content-type': 'application/x-www-form-urlencoded',
@@ -81,12 +81,12 @@ export default {
         })
     })
   },
-  get(options) {
+  get(options: any) {
     return this.request({
       ...options
     })
   },
-  post(options) {
+  post(options: any) {
     return this.request({
       ...options,
       data: qs.stringify(options.data)
