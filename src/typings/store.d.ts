@@ -2,6 +2,7 @@ declare namespace StoreState {
   interface Lyric {
     lrc: string;
     time: number;
+    endtime: number;
   }
   export interface MainState {
     // 是否进入播放页面

@@ -16,9 +16,9 @@ interface PlayDetailProps {
   onUpdateState: any
 }
 interface PlayDetailStates {
-  percent: number | string;
-  duration: number | string;
-  currentTime: number | string;
+  percent: number;
+  duration: number;
+  currentTime: number;
   transform: string;
 }
 
@@ -34,7 +34,7 @@ class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
   static options = {
     addGlobalClass: true
   }
-  private audio = getGlobalData('backgroundAudioManager')
+  private audio: Taro.BackgroundAudioManager = getGlobalData('backgroundAudioManager')
   constructor() {
     super(...arguments)
     this.state = {
@@ -61,46 +61,46 @@ class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
   // 实时获取音频播放进度
   getAudioPlayPercent() {
     if (this.audio && this.audio.src) {
-      let duration: number = this.audio.duration,
-        currentTime: number = this.audio.currentTime
-      let playPercent = currentTime / duration
+      let duration = this.audio.duration,
+        currentTime = this.audio.currentTime
+      let playPercent: number = Number(((currentTime / duration) * 100).toFixed(6))
       this.setState({
         duration: duration,
         currentTime: currentTime,
-        percent: (playPercent * 100).toFixed(6),
+        percent: playPercent,
       })
     }
   }
   // 计算时间
-  formatSeconds(value: any) {
-    let theTime = parseInt(value || 0),
+  formatSeconds(value: number) {
+    let theTime = value || 0,
       theTime1 = 0,
       theTime2 = 0
     if (theTime >= 60) {
-      theTime1 = parseInt(theTime / 60)
-      theTime = parseInt(theTime % 60)
+      theTime1 = parseInt((theTime / 60).toString())
+      theTime = parseInt((theTime % 60).toString())
       if (theTime1 >= 60) {
-        theTime2 = parseInt(theTime1 / 60)
-        theTime1 = parseInt(theTime1 % 60)
+        theTime2 = parseInt((theTime1 / 60).toString())
+        theTime1 = parseInt((theTime1 % 60).toString())
       }
     }
     let result
-    if (parseInt(theTime) > 9) {
-      result = '' + parseInt(theTime) + ''
+    if (parseInt(theTime.toString()) > 9) {
+      result = '' + parseInt(theTime.toString()) + ''
     } else {
-      result = '0' + parseInt(theTime) + ''
+      result = '0' + parseInt(theTime.toString()) + ''
     }
     if (theTime1 > 0) {
-      if (parseInt(theTime1) > 9) {
-        result = '' + parseInt(theTime1) + ':' + result
+      if (parseInt(theTime1.toString()) > 9) {
+        result = '' + parseInt(theTime1.toString()) + ':' + result
       } else {
-        result = '0' + parseInt(theTime1) + ':' + result
+        result = '0' + parseInt(theTime1.toString()) + ':' + result
       }
     } else {
       result = '00:' + result;
     }
     if (theTime2 > 0) {
-      result = '' + parseInt(theTime2) + ':' + result
+      result = '' + parseInt(theTime2.toString()) + ':' + result
     }
     return result
   }

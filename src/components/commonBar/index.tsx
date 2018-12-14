@@ -45,7 +45,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
   static options = {
     addGlobalClass: true
   }
-  private audio = getGlobalData('backgroundAudioManager')
+  private audio: Taro.BackgroundAudioManager = getGlobalData('backgroundAudioManager')
   constructor() {
     super(...arguments)
     this.state = {
