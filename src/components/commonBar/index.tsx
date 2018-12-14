@@ -18,7 +18,7 @@ import {
 interface CommonBarProps {
   main: StoreState.MainState;
   onFetchSongInfo: (payload: { id: number, callback?: any }) => any;
-  onFetchSongById: (payload: { id: number, restore: boolean }) => any;
+  onFetchSongById: (payload: { id: number, restore?: boolean }) => any;
   onFetchLyric: (payload: { id: number }) => any;
   onSetShuffleList: (payload: { item: Array<StoreState.playItemState> }) => any;
   onUpdateState: (namespace: string, payload: any) => any;
@@ -116,7 +116,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
       { playList, shuffleList } = main
     let addItem: Array<StoreState.playItemState> = [],
         ids: Array<number | undefined> = playList.map(i => i.id)
-    item.forEach((data: any) => {
+    item.forEach((data: StoreState.playItemState) => {
       if (!ids.includes(data.id)) {
         addItem.push(data)
       }
