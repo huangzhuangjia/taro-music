@@ -13,9 +13,9 @@ import './newSong.scss'
 interface NewSongProps {
   main: StoreState.MainState;
   newSong: StoreState.NewSongState;
-  onFetchNewestList: any;
-  onFetchSongById: any;
-  onUpdateState: any;
+  onFetchNewestList: (payload: { callback: any }) => any;
+  onFetchSongById: (payload: { id: number, restore: boolean }) => any;
+  onUpdateState: (namespace: string, payload: any) => any;
 }
 const mapStateToProps = ({ main, newSong }) => ({
   main,

@@ -7,9 +7,9 @@ import { fetchRecommendList, updateState } from '../../actions'
 import './recommend.scss'
 
 interface RecommendProps {
-  recommendList: any,
-  onFetchRecommendList: any,
-  onUpdateState: any
+  recommendList: any;
+  onFetchRecommendList: (payload: { callback: any }) => any;
+  onUpdateState: (namespace: string, payload: any) => any;
 }
 
 const mapStateToProps = ({ recommend }) => ({
@@ -41,7 +41,7 @@ class Recommend extends Component<RecommendProps, {}> {
     this.props.onFetchRecommendList({ callback })
   }
 
-  getPlayCount(num) {
+  getPlayCount(num: number): string {
     let str
     if(num > 10000) {
       str = (num / 10000).toFixed(0)
@@ -52,7 +52,7 @@ class Recommend extends Component<RecommendProps, {}> {
     return str
   }
 
-  navigateTo(url) {
+  navigateTo(url: string) {
     Taro.redirectTo({url: url})
   }
 

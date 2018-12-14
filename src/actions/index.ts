@@ -2,17 +2,17 @@ import Action from '../utils/action'
 
 export const updateState = (namespace: string, payload?: any) => Action(`${namespace}/updateState`, payload)
 
-export const fetchSongInfo = (payload?: any) => Action('main/fetchSongInfo', payload)
+export const fetchSongInfo = ({ id, callback }) => Action('main/fetchSongInfo', { id, callback })
 
-export const fetchSongById = (payload?: any) => Action('main/fetchSongById', payload)
+export const fetchSongById = ({ id, restore }) => Action('main/fetchSongById', { id, restore })
 
-export const fetchLyric = (payload?: any) => Action('main/fetchLyric', payload)
+export const fetchLyric = ({ id }) => Action('main/fetchLyric', { id })
 
-export const setShuffleList = (payload?: any) => Action('main/getShuffleList', payload)
+export const setShuffleList = ({ item }) => Action('main/getShuffleList', { item })
 
-export const fetchAlbumList = (payload?: any) => Action('album/fetchAlbumList', payload)
+export const fetchAlbumList = ({ callback, initOffset, isInit }) => Action('album/fetchAlbumList', { callback, initOffset, isInit })
 
-export const fetchNewestList = (payload?: any) => Action('newSong/fetchNewestList', payload)
+export const fetchNewestList = ({ callback }) => Action('newSong/fetchNewestList', { callback })
 
-export const fetchRecommendList = (payload?: any) => Action('recommend/fetchRecommendList', payload)
+export const fetchRecommendList = ({ callback }) => Action('recommend/fetchRecommendList', { callback })
 

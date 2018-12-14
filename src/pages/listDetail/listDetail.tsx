@@ -12,7 +12,7 @@ import './listDetail.scss'
 
 interface ListDetailProps {
   main: StoreState.MainState;
-  onFetchSongById: any
+  onFetchSongById: (payload: { id: number, restore: boolean }) => any
 }
 interface ListDetailStates {
   listData: any;

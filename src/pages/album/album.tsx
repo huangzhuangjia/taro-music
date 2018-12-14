@@ -6,8 +6,8 @@ import { fetchAlbumList, updateState } from '../../actions'
 import './album.scss'
 
 interface AlbumProps {
-  onFetchAlbumList: any;
-  onUpdateState: any;
+  onFetchAlbumList: (payload: { callback: any, initOffset: number, isInit: boolean }) => any;
+  onUpdateState: (namespace: string, payload: any) => any;
   album: StoreState.AlbumState;
   loading: boolean;
 }

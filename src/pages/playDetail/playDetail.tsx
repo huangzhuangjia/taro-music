@@ -13,7 +13,7 @@ const playOrderIcon = ['icon-list-loop', 'icon-single-loop', 'icon-bofangye-caoz
 
 interface PlayDetailProps {
   main: StoreState.MainState;
-  onUpdateState: any
+  onUpdateState: (namespace: string, payload: any) => any;
 }
 interface PlayDetailStates {
   percent: number;
@@ -72,7 +72,7 @@ class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
     }
   }
   // 计算时间
-  formatSeconds(value: number) {
+  formatSeconds(value: number): string {
     let theTime = value || 0,
       theTime1 = 0,
       theTime2 = 0
@@ -129,7 +129,7 @@ class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
       })
     }
   }
-  switchPlay(state) {
+  switchPlay(state: boolean) {
     let audioSrc = this.audio.src
     if (this.audio && audioSrc && audioSrc.indexOf('/null') == -1) {
       if (state) {
@@ -145,7 +145,7 @@ class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
     eventEmitter.trigger(Events.SWITCHORDER)
   }
   // 切换歌曲
-  playNext(type) {
+  playNext(type: number) {
     eventEmitter.trigger(Events.NEXT, type)
   }
   // 点击展开播放列表

@@ -14,10 +14,10 @@ interface PlayListProps {
   playListState: boolean,
   playOrder: number,
   currentSong: any,
-  onClose: any,
-  onSwitchOrder: any,
-  onDelList: any,
-  onListToPlay: any,
+  onClose: () => any,
+  onSwitchOrder: () => any,
+  onDelList: (type: number | string, key?: number) => any,
+  onListToPlay: (id: number) => any,
 }
 
 class PlayList extends Component<PlayListProps, {}> {
@@ -54,7 +54,7 @@ class PlayList extends Component<PlayListProps, {}> {
               playList.map((data, k) => {
                 return (
                   <View className={`${currentSong.id === data.id ? 'row-playing' : ''} row`} key={k}>
-                    <Text className='info' onClick={onListToPlay.bind(this, data)}>{data.name}<Text> - {data.ar}</Text></Text>
+                    <Text className='info' onClick={onListToPlay.bind(this, data.id)}>{data.name}<Text> - {data.ar}</Text></Text>
                     <View className='del iconfont icon-guanbi' onClick={onDelList.bind(this, data.id, k)}></View>
                   </View>
                 )

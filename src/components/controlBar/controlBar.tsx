@@ -9,9 +9,9 @@ interface ControlBarProps {
   playState: boolean;
   songInfo: any;
   transform: string;
-  onToUIPage: any
-  onSwitchPlay: any
-  onTargetingCur: any
+  onToUIPage: () => any
+  onSwitchPlay: (state: boolean) => any
+  onTargetingCur: () => any
 }
 
 class ControlBar extends Component<ControlBarProps, {}> {

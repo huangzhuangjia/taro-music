@@ -17,11 +17,11 @@ import {
 
 interface CommonBarProps {
   main: StoreState.MainState;
-  onFetchSongInfo: any;
-  onFetchSongById: any;
-  onFetchLyric: any;
-  onSetShuffleList: any;
-  onUpdateState: any;
+  onFetchSongInfo: (payload: { id: number, callback?: any }) => any;
+  onFetchSongById: (payload: { id: number, restore: boolean }) => any;
+  onFetchLyric: (payload: { id: number }) => any;
+  onSetShuffleList: (payload: { item: Array<StoreState.playItemState> }) => any;
+  onUpdateState: (namespace: string, payload: any) => any;
 }
 interface CommonBarStates {
   playListState: boolean;
@@ -255,11 +255,11 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
     let shuffleList = shuffleArray(playList || [], { copy: true })
     onUpdateState('main', { shuffleList })
   }
-  listToPlay(data) {
-    this.playSongById(data.id)
+  listToPlay(id: number) {
+    this.playSongById(id)
   }
   // 删除播放列表
-  delList(id: string, key: number) {
+  delList(id: number | string, key?: number) {
     const { main, onUpdateState } = this.props
     let playList = main.playList || [];
     if (id === 'all') {
