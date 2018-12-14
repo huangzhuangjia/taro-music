@@ -11,11 +11,11 @@ import eventEmitter from '../utils/eventEmitter'
 import * as Events from '../constants/event-types'
 
 // 处理歌词
-function formatLyric(lrc): Array<StoreState.Lyric> {
+function formatLyric(lrc: string): Array<StoreState.Lyric> {
   if (!lrc) return []
   let format = /\[(\d{2}:\d{2})\.\d{2,3}\](.*)/
   let outLrc = {}
-  let lrcList: any[] = []
+  let lrcList: Array<StoreState.Lyric> = []
   let lrcArr: Array<string> = lrc.split('\n') || []
 
   lrcArr.forEach(item => {
@@ -135,7 +135,7 @@ export default modelExtend(model,  {
     *fetchLyric({payload}, {call, put}) {
       try {
         const res = yield call(fetchLyric, payload)
-        let lyric = res.lrc ? res.lrc.lyric : null
+        let lyric: string = res.lrc ? res.lrc.lyric : null
         let currentLyric = formatLyric(lyric)
         yield put(Action('updateState', {currentLyric}))
       } catch (e) {
