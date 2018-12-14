@@ -2,7 +2,7 @@
 
 ## Introduction
 
- 本项目是基于 [Taro](https://github.com/NervJS/taro) + [Dva](https://dvajs.com/) 开发的音乐播放器小程序，是个人用于学习taro框架开发的，功能也相对简单，当然也存在一些不足，前期是用taro的redux版本开发，后面发现业务代码和页面耦合度高，就加入了dva，一个基于 [redux](https://github.com/reduxjs/redux) 和 [redux-saga](https://github.com/redux-saga/redux-saga) 的数据流方案，这里只用了dva的一个核心 [dva-core](https://github.com/dvajs/dva/tree/master/packages/dva-core)，用于model层来降低耦合，用 [dva-model-extend](https://github.com/dvajs/dva-model-extend) 复用 model，大大提升了开发体验，效果不错。后台是网易云音乐[NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/) 提供的API，目前该项目还没有正式上线到小程序。
+ 本项目是基于 [Taro](https://github.com/NervJS/taro) + [Dva](https://dvajs.com/) + [TypeScript](https://www.tslang.cn/index.html) 开发的音乐播放器小程序，是个人用于学习taro框架开发的，功能也相对简单，当然也存在一些不足，前期是用taro的redux版本开发，后面发现业务代码和页面耦合度高，就加入了dva，一个基于 [redux](https://github.com/reduxjs/redux) 和 [redux-saga](https://github.com/redux-saga/redux-saga) 的数据流方案，这里只用了dva的一个核心 [dva-core](https://github.com/dvajs/dva/tree/master/packages/dva-core)，用于model层来降低耦合，用 [dva-model-extend](https://github.com/dvajs/dva-model-extend) 复用 model，大大提升了开发体验，效果不错。后台是网易云音乐[NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/) 提供的API，目前该项目还没有正式上线到小程序。
 
  [![music.gif](https://github.com/huangzhuangjia/taro-music/blob/master/src/assets/image/music.gif?raw=true)](https://github.com/huangzhuangjia/taro-music/blob/master/src/assets/image/music.gif?raw=true)
 
