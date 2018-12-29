@@ -265,7 +265,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
     if (id === 'all') {
       playList = []
     } else {
-      if (playList[key].id === id) {
+      if (key !== undefined && playList[key].id === id) {
         playList.splice(key, 1)
       }
     }
