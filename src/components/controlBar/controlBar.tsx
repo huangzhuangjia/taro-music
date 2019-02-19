@@ -1,25 +1,13 @@
 // 播放控制条
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image, Canvas } from '@tarojs/components'
+import { ControlBarProps } from "./controlBar.interface";
 import coverImg from '../../assets/image/logo.png'
 import './controlBar.scss'
-
-interface ControlBarProps {
-  isUIPage: boolean;
-  playState: boolean;
-  songInfo: any;
-  transform: string;
-  onToUIPage: () => any
-  onSwitchPlay: (state: boolean) => any
-  onTargetingCur: () => any
-}
 
 class ControlBar extends Component<ControlBarProps, {}> {
   static options = {
     addGlobalClass: true
-  }
-  constructor() {
-    super(...arguments)
   }
   render() {
     let {

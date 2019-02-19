@@ -7,6 +7,7 @@ import * as Events from '../../constants/event-types'
 import CommonBar from '../../components/commonBar/index'
 import PlayDetail from '../playDetail/playDetail'
 import { fetchSongById } from '../../actions'
+import Loading from '../../components/loading'
 
 import './listDetail.scss'
 
@@ -16,7 +17,8 @@ interface ListDetailProps {
 }
 interface ListDetailStates {
   listData: any;
-  scrollState: boolean
+  scrollState: boolean,
+  loading: boolean
 }
 const mapStateToProps = ({ main }) => ({
   main
@@ -35,6 +37,7 @@ class ListDetail extends Component<ListDetailProps, ListDetailStates> {
     this.state = {
       listData: {},
       scrollState: false,
+      loading: true
     }
   }
   componentWillPreload(params) {
@@ -50,6 +53,7 @@ class ListDetail extends Component<ListDetailProps, ListDetailStates> {
       if (res.code === 200) {
         this.setState({
           listData: res.playlist,
+          loading: false
         })
       }
     })
@@ -75,7 +79,8 @@ class ListDetail extends Component<ListDetailProps, ListDetailStates> {
   }
 
   goBack() {
-    Taro.redirectTo({url: '/pages/index/index'})
+    Taro.navigateBack()
+    // Taro.redirectTo({url: '/pages/index/index'})
   }
   saveToList() {
     let tracks = this.state.listData.tracks || []
@@ -92,15 +97,18 @@ class ListDetail extends Component<ListDetailProps, ListDetailStates> {
     eventEmitter.trigger(Events.BATCHADD, item)
   }
   render() {
-    let { listData, scrollState } = this.state
+    let { listData, loading } = this.state
     let tracks = listData.tracks || []
     let currentSong = this.props.main.currentSong || {}
     let winHeight = Taro.getSystemInfoSync().windowHeight
+    if (loading) {
+      return <Loading/>
+    }
     return (
       <View className='listDetail-wrapper wrapper'>
-        <View className={`windowsHead ${scrollState ? 'windowsHead-shadow' : 'windowsHead-transparent'}`}>
-          <View className='back iconfont icon-fanhui' onClick={this.goBack.bind(this)}></View>
-        </View>
+        {/* <View className={`windowsHead ${scrollState ? 'windowsHead-shadow' : 'windowsHead-transparent'}`}> */}
+          {/* <View className='back iconfont icon-fanhui' onClick={this.goBack.bind(this)}></View> */}
+        {/*  </View> */}
         <ScrollView
           scrollY
           scrollTop='0'

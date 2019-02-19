@@ -12,7 +12,6 @@ import {
  */
 function checkHttpStatus(response: API.Response) {
   if (response.statusCode >= 200 && response.statusCode < 300) {
-    Taro.hideNavigationBarLoading()
     return response.data
   }
 
@@ -50,7 +49,6 @@ function checkSuccess(data: any, resolve) {
  * @param reject
  */
 function throwError(error, reject) {
-  Taro.hideNavigationBarLoading()
   if (error.errMsg) {
     reject('服务器正在维护中!')
     throw new Error('服务器正在维护中!')
@@ -63,7 +61,6 @@ export default {
     const { url } = options
 
     return new Promise((resolve, reject) => {
-      Taro.showNavigationBarLoading()
       Taro.request({
         ...options,
         method: method || 'GET',

@@ -3,17 +3,20 @@ import { View, ScrollView, Text, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import { getCacheData } from '../../utils/index'
 import { fetchRecommendList, updateState } from '../../actions'
+import Loading from '../../components/loading'
 
 import './recommend.scss'
 
 interface RecommendProps {
   recommendList: any;
+  loading: boolean;
   onFetchRecommendList: (payload: { callback: any }) => any;
   onUpdateState: (namespace: string, payload: any) => any;
 }
 
-const mapStateToProps = ({ recommend }) => ({
-  recommendList: recommend.recommendList
+const mapStateToProps = ({ recommend, loading }) => ({
+  recommendList: recommend.recommendList,
+  loading: loading.effects['recommend/fetchRecommendList']
 })
 const mapDispatchToProps = ({
   onFetchRecommendList: fetchRecommendList,
@@ -53,11 +56,14 @@ class Recommend extends Component<RecommendProps, {}> {
   }
 
   navigateTo(url: string) {
-    Taro.redirectTo({url: url})
+    Taro.navigateTo({url: url})
   }
 
   render() {
-    let { recommendList } = this.props
+    let { recommendList, loading } = this.props
+    if (loading) {
+      return <Loading/>
+    }
     const RecommendList = recommendList.slice(1).map((data, k) => {
       return (
         <View onClick={this.navigateTo.bind(this, `/pages/listDetail/listDetail?id=${data.id}`)} key={k}>

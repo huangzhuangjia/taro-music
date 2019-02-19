@@ -1,25 +1,14 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
+import { playOrderItem, PlayListProps } from "./playList.interface";
 
 import './playList.scss'
 
-const playOrderMap = [
+const playOrderMap: Array<playOrderItem> = [
   {icon: 'icon-list-loop', name: '列表循环'},
   {icon: 'icon-single-loop', name: '单曲循环'},
   {icon: 'icon-bofangye-caozuolan-suijibofang', name: '随机播放'}
 ]
-
-interface PlayListProps {
-  playList: Array<StoreState.playItemState>,
-  playListState: boolean,
-  playOrder: number,
-  currentSong: any,
-  onClose: () => any,
-  onSwitchOrder: () => any,
-  onDelList: (type: number | string, key?: number) => any,
-  onListToPlay: (id: number) => any,
-}
-
 class PlayList extends Component<PlayListProps, {}> {
   static options = {
     addGlobalClass: true

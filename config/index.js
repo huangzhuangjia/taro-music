@@ -1,5 +1,4 @@
 'use strict';
-
 var config = {
   projectName: 'taro-music',
   date: '2018-11-8',

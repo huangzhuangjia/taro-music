@@ -9,17 +9,20 @@ import {
 } from '../../actions'
 
 import './newSong.scss'
+import Loading from '../../components/loading';
 
 interface NewSongProps {
   main: StoreState.MainState;
   newSong: StoreState.NewSongState;
+  loading: boolean;
   onFetchNewestList: (payload: { callback: any }) => any;
   onFetchSongById: (payload: { id: number, restore: boolean }) => any;
   onUpdateState: (namespace: string, payload: any) => any;
 }
-const mapStateToProps = ({ main, newSong }) => ({
+const mapStateToProps = ({ main, newSong, loading }) => ({
   main,
-  newSong
+  newSong,
+  loading: loading.effects['newSong/fetchNewestList']
 })
 const mapDispatchToProps = ({
   onFetchNewestList: fetchNewestList,
@@ -31,9 +34,6 @@ const mapDispatchToProps = ({
 class NewSong extends Component<NewSongProps, {}> {
   static options = {
     addGlobalClass: true
-  }
-  constructor() {
-    super(...arguments)
   }
   getNewest() {
     let newestList = getCacheData('newSongList')
@@ -50,7 +50,9 @@ class NewSong extends Component<NewSongProps, {}> {
   render() {
     const { currentSong } = this.props.main,
       { newestList } = this.props.newSong
-
+    if (this.props.loading) {
+      return <Loading/>
+    }
     return (
       <View className='newest'>
         <View className='item-list'>

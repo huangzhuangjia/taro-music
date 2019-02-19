@@ -168,7 +168,7 @@ class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
       <View className='page-ui-wrapper'>
         <View className={`play-ui-page ${main.UIPage ? 'play-ui-page-show' : ''}`}>
           <View className='windowsHead'>
-            <View className='back iconfont icon-fanhui' onClick={this.goBack.bind(this)}></View>
+            <View className='back iconfont icon-guanbi' onClick={this.goBack.bind(this)}></View>
             <View className='dragbar'></View>
           </View>
           {/* 封面 */}

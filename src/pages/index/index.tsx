@@ -24,17 +24,9 @@ interface IndexStates {
   tabs: Array<TabItem>
 }
 class Index extends Component<{}, IndexStates> {
-  constructor() {
-    super(...arguments)
-    this.state = {
-      activeTab: 0,
-      tabs: [...tabs]
-    }
-  }
-  componentWillMount() {
-    this.setState({
-      activeTab: parseInt(this.$router.params.tab) || 0
-    })
+  state = {
+    activeTab: 0,
+    tabs: [...tabs]
   }
   componentDidMount() {
     this.getCacheList()
@@ -73,9 +65,6 @@ class Index extends Component<{}, IndexStates> {
       default:
         break;
     }
-  }
-  navigateTo(url) {
-    Taro.navigateTo({url: url})
   }
   // 停止下拉刷新
   stopPullDownRefresh() {

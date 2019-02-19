@@ -2,6 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { View, ScrollView, Text, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import { fetchAlbumList, updateState } from '../../actions'
+import Loading from '../../components/loading'
 
 import './album.scss'
 
@@ -26,9 +27,6 @@ class Album extends Component<AlbumProps, {}> {
   static options = {
     addGlobalClass: true
   }
-  constructor() {
-    super(...arguments)
-  }
   /**
    * 获取新碟数据
    * @param callback 回调
@@ -52,11 +50,14 @@ class Album extends Component<AlbumProps, {}> {
   }
 
   navigateTo(url) {
-    Taro.redirectTo({url: url})
+    Taro.navigateTo({url: url})
   }
 
   render() {
     let { albumList, total } = this.props.album
+    if (this.props.loading) {
+      return <Loading/>
+    }
     return (
       <View className='album'>
         <ScrollView

@@ -7,17 +7,19 @@ import { getAlbumDetail } from '../../services/index'
 import CommonBar from '../../components/commonBar/index'
 import PlayDetail from '../playDetail/playDetail'
 import { fetchSongById } from '../../actions'
+import Loading from '../../components/loading'
 
 import '../listDetail/listDetail.scss'
 
 interface AlbumDetailProps {
   main: StoreState.MainState,
-  onFetchSongById: (payload: { id: number, restore: boolean }) => any
+  onFetchSongById: (payload: { id: number, restore: boolean }) => any,
 }
 interface AlbumDetailStates {
   album: any,
   songs: any,
   scrollState: boolean,
+  loading: boolean
 }
 
 const mapStateToProps = ({ main }) => ({
@@ -38,6 +40,7 @@ class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
       album: {},
       songs: [],
       scrollState: false,
+      loading: true
     }
   }
 
@@ -57,6 +60,7 @@ class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
         this.setState({
           songs: res.songs,
           album: res.album,
+          loading: false
         })
       }
     })
@@ -84,7 +88,7 @@ class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
   }
 
   goBack() {
-    Taro.redirectTo({url: '/pages/index/index?tab=2'})
+    Taro.navigateBack()
   }
 
   saveToList() {
@@ -103,14 +107,17 @@ class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
   }
 
   render() {
-    let { songs, album, scrollState } = this.state,
+    let { songs, album, loading } = this.state,
       currentSong = this.props.main.currentSong || {},
       winHeight = Taro.getSystemInfoSync().windowHeight
+    if (loading) {
+      return <Loading/>
+    }
     return (
       <View className='listDetail-wrapper'>
-        <View className={`windowsHead ${scrollState ? '' : 'windowsHead-transparent'}`}>
+        {/* <View className={`windowsHead ${scrollState ? '' : 'windowsHead-transparent'}`}>
           <View className='back iconfont icon-fanhui' onClick={this.goBack.bind(this)}></View>
-        </View>
+        </View> */}
         <ScrollView
           className='wrap'
           scrollY
