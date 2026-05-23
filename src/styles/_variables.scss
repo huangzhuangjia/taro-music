@@ -1,25 +1,38 @@
-// JMusic · 沉韵 Slate Resonance
-$jm-color-primary: #E06452;
-$jm-color-primary-dark: #C94E3D;
-$jm-color-primary-soft: rgba(224, 100, 82, 0.12);
+// JMusic · 沉韵 v2（UI UX Pro Max：Music Streaming 浅色分层，非纯白底）
+// 参考：暖石 Background + 纸面 Card + 靛紫播放区 + 赤陶 CTA
 
-$jm-color-bg: #F6F7F9;
-$jm-color-surface: #FFFFFF;
-$jm-color-divider: #EBEDF0;
-$jm-color-border: #E2E4E8;
+// ── Brand ──
+$jm-color-primary: #C85347;
+$jm-color-primary-dark: #A84339;
+$jm-color-primary-soft: rgba(200, 83, 71, 0.14);
+$jm-color-accent-play: #3A9B6E;
 
-$jm-color-text: #2C2C2C;
-$jm-color-text-secondary: #8A8F98;
-$jm-color-text-tertiary: #B8BCC4;
-$jm-color-text-inverse: #FFFFFF;
+// ── Surfaces（三层，避免 #FFFFFF 铺满）──
+$jm-color-bg: #E6E4DF;
+$jm-color-surface: #EFEDEA;
+$jm-color-surface-raised: #F7F5F2;
+$jm-color-surface-inset: #E0DCD5;
 
-$jm-color-mask: rgba(0, 0, 0, 0.45);
-$jm-color-tag: rgba(0, 0, 0, 0.55);
+// 兼容旧 token 名
+$jm-color-surface-card: $jm-color-surface-raised;
 
-$jm-color-player-from: #4A4F5C;
-$jm-color-player-to: #2E3238;
-$jm-color-progress-track: rgba(255, 255, 255, 0.25);
-$jm-color-progress-fill: #FFFFFF;
+$jm-color-divider: #D5D0C9;
+$jm-color-border: #C8C2BA;
+
+// ── Text ──
+$jm-color-text: #2B2926;
+$jm-color-text-secondary: #6B6560;
+$jm-color-text-tertiary: #9C9690;
+$jm-color-text-inverse: #F7F5F2;
+
+$jm-color-mask: rgba(43, 41, 38, 0.5);
+$jm-color-tag: rgba(43, 41, 38, 0.62);
+
+// ── Player（靛灰炭，与暖色页面形成对比）──
+$jm-color-player-from: #45435A;
+$jm-color-player-to: #2A2838;
+$jm-color-progress-track: rgba(255, 255, 255, 0.22);
+$jm-color-progress-fill: #F7F5F2;
 
 $theme: $jm-color-primary;
 
@@ -46,9 +59,10 @@ $jm-radius-sm: 8rpx;
 $jm-radius-md: 12rpx;
 $jm-radius-lg: 16rpx;
 
-$jm-shadow-sm: 0 4rpx 16rpx rgba(44, 44, 44, 0.06);
-$jm-shadow-md: 0 8rpx 28rpx rgba(44, 44, 44, 0.1);
-$jm-shadow-cover: 0 12rpx 40rpx rgba(44, 44, 44, 0.14);
+$jm-shadow-sm: 0 4rpx 16rpx rgba(43, 41, 38, 0.08);
+$jm-shadow-md: 0 8rpx 28rpx rgba(43, 41, 38, 0.12);
+$jm-shadow-cover: 0 12rpx 40rpx rgba(43, 41, 38, 0.16);
+$jm-shadow-bar: 0 -4rpx 24rpx rgba(43, 41, 38, 0.1);
 
 $jm-z-bar: 100;
 $jm-z-player: 1000;

@@ -4,6 +4,7 @@
 .newest {
   width: 100%;
   height: 100%;
+  background: $jm-color-surface;
 
   .newest-banner {
     display: none;
@@ -37,7 +38,7 @@
           display: block;
           width: 100%;
           height: 100%;
-          background: $jm-color-border;
+          background: $jm-color-surface-inset;
         }
       }
 

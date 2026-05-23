@@ -3,12 +3,12 @@
 
 .fix-control {
   width: 100%;
-  background: $jm-color-surface;
+  background: $jm-color-surface-raised;
   position: fixed;
   bottom: 0;
   left: 0;
   z-index: $jm-z-bar;
-  box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.06);
+  box-shadow: $jm-shadow-bar;
   display: none;
   align-items: center;
   min-height: 128rpx;

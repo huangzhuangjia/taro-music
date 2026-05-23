@@ -74,42 +74,23 @@
 
 ## 2. 设计令牌 Design Tokens
 
-### 2.1 色彩 Color
+### 2.1 色彩 Color（v2 · UI UX Pro Max 分层）
+
+| 角色 | 色值 | 说明 |
+|------|------|------|
+| 页面底 | `#E6E4DF` | 暖石灰，非纯白 |
+| 内容面 | `#EFEDEA` | Tab 列表区 |
+| 抬升面 | `#F7F5F2` | Tab 栏、底栏、卡片 |
+| 主色 CTA | `#C85347` | 赤陶（非网易红） |
+| 播放强调 | `#3A9B6E` | 可选播放态点缀 |
+| 播放器 | `#45435A → #2A2838` | 靛灰炭渐变 |
 
 ```scss
-// ── Brand ──
-$jm-color-primary:        #E06452;   // 珊瑚赤 — 播放、CTA、Tab 指示
-$jm-color-primary-dark:   #C94E3D;   // 按下态
-$jm-color-primary-soft:   rgba(224, 100, 82, 0.12); // 播放行背景
-
-// ── Neutral ──
-$jm-color-bg:             #F6F7F9;   // 页面底 — 冷纸灰
-$jm-color-surface:        #FFFFFF;   // 卡片/栏
-$jm-color-divider:        #EBEDF0;
-$jm-color-border:         #E2E4E8;
-
-// ── Text ──
-$jm-color-text:           #2C2C2C;   // 主文案
-$jm-color-text-secondary: #8A8F98;   // 副文案、播放量
-$jm-color-text-tertiary:  #B8BCC4;   // 占位、结束文案
-$jm-color-text-inverse:   #FFFFFF;   // 深色面板上的字
-
-// ── Semantic ──
-$jm-color-playing:        $jm-color-primary;
-$jm-color-mask:           rgba(0, 0, 0, 0.45);
-$jm-color-tag:            rgba(0, 0, 0, 0.55);  // 封面角标底
-
-// ── Player ──
-$jm-color-player-from:    #4A4F5C;
-$jm-color-player-to:      #2E3238;
-$jm-color-progress-track: rgba(255, 255, 255, 0.25);
-$jm-color-progress-fill:  #FFFFFF;
-
-// ── Legacy 映射（迁移期）
-$theme: $jm-color-primary;  // 替换各文件 $theme: #666
+$jm-color-bg: #E6E4DF;
+$jm-color-surface: #EFEDEA;
+$jm-color-surface-raised: #F7F5F2;
+$jm-color-primary: #C85347;
 ```
-
-**色彩情绪**：克制、偏暖、像黑胶收纳盒里的试听单 — 不是夜店霓虹，也不是企业蓝灰。
 
 ### 2.2 字体 Typography
 

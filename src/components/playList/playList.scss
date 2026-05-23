@@ -23,7 +23,7 @@
     position: absolute;
     left: 0;
     bottom: -60vh;
-    background: $jm-color-surface;
+    background: $jm-color-surface-raised;
     border-radius: $jm-radius-lg $jm-radius-lg 0 0;
     transition: bottom $jm-duration-normal $jm-ease-out;
 
@@ -132,7 +132,7 @@
       text-align: center;
       font-size: $jm-font-body;
       color: $jm-color-text-secondary;
-      background: $jm-color-surface;
+      background: $jm-color-surface-raised;
       border-top: 1rpx solid $jm-color-divider;
       @include safe-area-bottom($jm-space-sm);
     }

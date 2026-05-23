@@ -6,7 +6,7 @@ export default defineAppConfig({
   ],
   window: {
     backgroundTextStyle: 'light',
-    navigationBarBackgroundColor: '#F6F7F9',
+    navigationBarBackgroundColor: '#F7F5F2',
     navigationBarTitleText: 'JMusic',
     navigationBarTextStyle: 'black'
   },
