@@ -1,5 +1,4 @@
-import { Component } from 'react'
-import Taro from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image, Slider } from '@tarojs/components'
 import { connect } from 'react-redux'
 import eventEmitter from '../../utils/eventEmitter'
@@ -26,9 +25,9 @@ interface PlayDetailStates {
 const mapStateToProps = ({ main }) => ({
   main
 })
-const mapDispatchToProps = {
+const mapDispatchToProps = ({
   onUpdateState: updateState
-}
+})
 
 @connect(mapStateToProps, mapDispatchToProps)
 class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
@@ -50,9 +49,9 @@ class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
       this.getAudioPlayPercent()
     })
   }
-  componentDidUpdate(prevProps: PlayDetailProps) {
-    const { main } = this.props
-    if (!main.playState && main.UIPage && prevProps.main.playState !== main.playState) {
+  componentWillReceiveProps(nextProps) {
+    let { main } = nextProps
+    if (!main.playState && main.UIPage) {
       this.getAudioPlayPercent()
     }
   }
