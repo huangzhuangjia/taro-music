@@ -54,6 +54,11 @@ class Index extends Component<IndexProps, IndexStates> {
     tabs: [...tabs]
   }
 
+  componentDidShow() {
+    const commonBar = this.refs.commonBar as any
+    commonBar && commonBar.registerAsPlayerHost && commonBar.registerAsPlayerHost()
+  }
+
   componentDidMount() {
     this.loadInitialData()
   }
@@ -180,7 +185,7 @@ class Index extends Component<IndexProps, IndexStates> {
           </View>
         </View>
         <PlayDetail />
-        <CommonBar />
+        <CommonBar ref='commonBar' />
       </View>
     )
   }

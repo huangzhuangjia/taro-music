@@ -44,6 +44,11 @@ class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
     }
   }
 
+  componentDidShow() {
+    const commonBar = this.refs.commonBar as any
+    commonBar && commonBar.registerAsPlayerHost && commonBar.registerAsPlayerHost()
+  }
+
   componentDidMount() {
     this.getListDetail()
   }
@@ -144,7 +149,7 @@ class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
           </View>
         </ScrollView>
         <PlayDetail />
-        <CommonBar />
+        <CommonBar ref='commonBar' />
       </View>
     )
   }

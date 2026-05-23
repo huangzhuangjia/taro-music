@@ -42,6 +42,11 @@ class ListDetail extends Component<ListDetailProps, ListDetailStates> {
     }
   }
 
+  componentDidShow() {
+    const commonBar = this.refs.commonBar as any
+    commonBar && commonBar.registerAsPlayerHost && commonBar.registerAsPlayerHost()
+  }
+
   componentDidMount() {
     this.fetchListDetail()
   }
@@ -142,7 +147,7 @@ class ListDetail extends Component<ListDetailProps, ListDetailStates> {
           </View>
         </ScrollView>
         <PlayDetail />
-        <CommonBar />
+        <CommonBar ref='commonBar' />
       </View>
     )
   }
