@@ -6,7 +6,7 @@ import shuffleArray from 'shuffle-array'
 import ControlBar from '../controlBar/controlBar'
 import PlayList from '../playList/playList'
 import { bindPlayerEventsOnce, setPlayerHost } from '../../utils/playerBridge'
-import { getGlobalData, setCacheData, getCacheData } from '../../utils/index'
+import { getGlobalData, setGlobalData, setCacheData, getCacheData } from '../../utils/index'
 import {
   fetchSongInfo,
   fetchSongById,
