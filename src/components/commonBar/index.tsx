@@ -1,5 +1,4 @@
-import { Component } from 'react'
-import Taro from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { connect } from 'react-redux'
 import shuffleArray from 'shuffle-array'
@@ -47,6 +46,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
     addGlobalClass: true
   }
   private audio: Taro.BackgroundAudioManager = getGlobalData('backgroundAudioManager')
+  private pendingPlaySongId: number | undefined
   constructor() {
     super(...arguments)
     this.state = {
@@ -61,15 +61,25 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
   toUIPage() {
     this.props.onUpdateState('main', { UIPage: true })
   }
-  // 初始化播放器
-  initAudio(restore: boolean) {
-    let currentSong = this.props.main.currentSong
-    let url: string = currentSong.url
-    if (!url) {
+  // 初始化播放器（currentSong 由 INITAUDIO 传入，避免 props 未刷新播上一首）
+  initAudio(payload: boolean | StoreState.InitAudioPayload) {
+    const restore = typeof payload === 'boolean' ? payload : !!payload?.restore
+    const currentSong =
+      typeof payload === 'object' && payload?.currentSong
+        ? payload.currentSong
+        : this.props.main.currentSong
+    const songId = currentSong?.id
+    const url: string = currentSong?.url
+
+    if (!songId || !url) {
       this.showMsgToast('获取资源失败')
       return
     }
-    this.getSongInfo(currentSong.id, () => {
+
+    this.pendingPlaySongId = songId
+
+    this.getSongInfo(songId, () => {
+      if (this.pendingPlaySongId !== songId) return
       this.audio.src = url
       if (!restore) {
         this.audio.seek(0)
@@ -77,7 +87,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
         this.props.onUpdateState('main', { playState: !this.audio.paused })
       }
     })
-    this.getLyric(currentSong.id)
+    this.getLyric(songId)
   }
   // 歌曲播放
   playSongById(id: number | undefined, restore?: boolean) {
@@ -308,8 +318,8 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
   initEvents() {
     // 监听初始化音频事件
     eventEmitter.off(Events.INITAUDIO)
-    eventEmitter.on(Events.INITAUDIO, (restore) => {
-      this.initAudio(restore)
+    eventEmitter.on(Events.INITAUDIO, (payload) => {
+      this.initAudio(payload)
     })
     // 监听处罚添加播放列表事件
     eventEmitter.off(Events.BATCHADD)
@@ -367,9 +377,8 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
   render() {
     let { main } = this.props
     let { playListState, playList, transform } = this.state
-    if (!main) return null
+    if (!main) return
     let songInfo = main.songInfo
-    const hasActiveSong = Boolean(main.currentSong && main.currentSong.id)
 
     if (!songInfo.hasOwnProperty('al')) {
       songInfo.al = {};
@@ -390,8 +399,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
                   onListToPlay={this.listToPlay.bind(this)}
                   ref='playList'/>
         {/*控制条*/}
-        <ControlBar visible={hasActiveSong}
-                    isUIPage={main.UIPage}
+        <ControlBar isUIPage={main.UIPage}
                     playState={main.playState}
                     songInfo={songInfo}
                     transform={transform}
