@@ -1,7 +1,6 @@
-import { Component } from 'react'
-import Taro from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { View, ScrollView, Text, Image } from '@tarojs/components'
-import { connect } from 'react-redux'
+import { connect } from '@tarojs/redux'
 import { fetchAlbumList, updateState } from '../../actions'
 import Loading from '../../components/loading'
 
@@ -18,10 +17,10 @@ const mapStateToProps = ({ album, loading }) => ({
   album,
   loading: loading.effects['album/fetchAlbumList']
 })
-const mapDispatchToProps = {
+const mapDispatchToProps = ({
   onFetchAlbumList:fetchAlbumList,
   onUpdateState: updateState
-}
+})
 
 @connect(mapStateToProps, mapDispatchToProps)
 class Album extends Component<AlbumProps, {}> {
@@ -55,8 +54,9 @@ class Album extends Component<AlbumProps, {}> {
   }
 
   render() {
-    let { albumList, total } = this.props.album
-    if (this.props.loading) {
+    const album = this.props.album || { albumList: [], total: 0 }
+    const { albumList, total } = album
+    if (this.props.loading && albumList.length === 0) {
       return <Loading/>
     }
     return (
