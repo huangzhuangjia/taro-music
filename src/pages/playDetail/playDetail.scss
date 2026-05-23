@@ -1,16 +1,29 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
+@keyframes imgRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes jm-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .page-ui-wrapper {
   position: fixed;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   z-index: $jm-z-player;
   pointer-events: none;
   overflow: hidden;
-  font-family: $jm-font-family;
 
   .play-ui-page {
     width: 100%;
@@ -18,140 +31,218 @@
     position: absolute;
     left: 0;
     top: 100vh;
-    display: flex;
-    flex-direction: column;
+    z-index: 1;
     background: $jm-color-bg;
     overflow: hidden;
+    transition: top $jm-duration-normal $jm-ease-out;
     pointer-events: auto;
-    transition: top $jm-duration-slow $jm-ease-spring;
 
-    &__bg {
+    .windowsHead {
       position: absolute;
-      inset: 0;
-      transform: scale(1.2);
-      filter: blur(80px) saturate(180%);
-      opacity: 0.35;
-    }
-  }
-
-  .play-ui-page-show { top: 0; }
-
-  .play-nav {
-    position: relative;
-    z-index: 3;
-    display: flex;
-    justify-content: center;
-    padding: 16rpx $jm-page-x 8rpx;
-    padding-top: calc(16rpx + env(safe-area-inset-top));
-
-    &__down {
-      width: 72rpx;
-      height: 48rpx;
+      left: 0;
+      top: 0;
+      width: 100%;
+      z-index: 9;
+      padding: 24rpx $jm-page-x;
+      padding-top: calc(24rpx + env(safe-area-inset-top));
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 36rpx;
-      color: $jm-color-text-secondary;
-      border-radius: $jm-radius-pill;
-      background: rgba(255, 255, 255, 0.72);
-    }
-  }
+      box-sizing: border-box;
 
-  .play-body {
-    position: relative;
-    z-index: 2;
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 0 $jm-page-x;
-    padding-bottom: calc(32rpx + env(safe-area-inset-bottom));
-  }
+      .back {
+        width: 72rpx;
+        height: 72rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40rpx;
+        color: $jm-color-text-secondary;
+      }
 
-  .play-artwork {
-    flex-shrink: 0;
-    display: flex;
-    justify-content: center;
-    padding: $jm-space-md 0 $jm-space-lg;
-
-    &__cover {
-      width: 72vw;
-      max-width: 560rpx;
-      height: 72vw;
-      max-height: 560rpx;
-      border-radius: $jm-radius-artwork;
-      box-shadow: $jm-shadow-cover;
-      background: $jm-color-surface-inset;
-    }
-  }
-
-  .play-meta {
-    text-align: center;
-    padding: 0 $jm-space-sm;
-
-    &__title {
-      display: block;
-      font-size: $jm-font-title;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: $jm-color-text;
-      @include text-ellipsis;
+      .dragbar {
+        display: none;
+      }
     }
 
-    &__artist {
-      display: block;
-      margin-top: 8rpx;
-      font-size: $jm-font-body;
-      color: $jm-color-text-secondary;
-      @include text-ellipsis;
-    }
-  }
-
-  .play-progress {
-    margin-top: $jm-space-lg;
-
-    &__time {
+    .head {
+      position: absolute;
+      left: 0;
+      top: 30rpx;
+      width: 100%;
+      height: 88rpx;
       display: flex;
-      justify-content: space-between;
-      margin-top: 8rpx;
-      font-size: $jm-font-micro;
-      color: $jm-color-text-secondary;
+      justify-content: flex-end;
+      align-items: center;
+      z-index: 9;
+      padding-right: $jm-page-x;
+
+      .menu {
+        width: 88rpx;
+        height: 88rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $jm-color-text-secondary;
+        font-size: 36rpx;
+      }
     }
-  }
 
-  .play-controls {
-    margin-top: $jm-space-lg;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    .cover {
+      width: 56vw;
+      height: 56vw;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 12vh;
+      transform: translateX(-50%);
+      border: 4rpx solid $jm-color-surface;
+      box-shadow: $jm-shadow-cover;
+      z-index: 11;
+      overflow: hidden;
 
-    &__btn {
-      font-size: 44rpx;
-      color: $jm-color-text-secondary;
-      padding: 16rpx;
-      &--skip { font-size: 52rpx; color: $jm-color-text; }
-      &--play { font-size: 96rpx; color: $jm-color-primary; }
+      image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+
+      .bar-wrap {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        .dot-wrap {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          left: 0;
+          top: 0;
+          transform-origin: center;
+          z-index: 12;
+
+          .dot {
+            width: 16rpx;
+            height: 16rpx;
+            background: $jm-color-primary;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, -50%);
+          }
+        }
+      }
     }
-  }
 
-  .lyric-box {
-    flex: 1;
-    min-height: 0;
-    margin-top: $jm-space-md;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    .lyric-item {
-      text-align: center;
-      padding: 10rpx $jm-space-sm;
+    .lyric-box {
+      width: 100%;
+      position: absolute;
+      left: 0;
+      bottom: 40vh;
       font-size: $jm-font-caption;
-      color: $jm-color-text-tertiary;
-      display: none;
 
-      &--near { display: block; opacity: 0.55; color: $jm-color-text-secondary; }
-      &--active { display: block; color: $jm-color-text; font-size: $jm-font-body; font-weight: 600; }
+      .lyric-item {
+        text-align: center;
+        padding: 10rpx 48rpx;
+        display: none;
+        transition: all 0.4s $jm-ease-out;
+      }
+
+      .ready {
+        display: block;
+        color: $jm-color-text-secondary;
+        opacity: 0.55;
+        font-size: $jm-font-caption;
+      }
+
+      .select {
+        display: block;
+        color: $jm-color-text;
+        font-size: 30rpx;
+        font-weight: 600;
+        opacity: 1;
+      }
     }
+
+    .wave {
+      width: 100%;
+      height: 100vh;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      pointer-events: none;
+
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .player-panel {
+      width: 100%;
+      height: 38vh;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      z-index: 9;
+      background: linear-gradient(180deg, $jm-color-player-from 0%, $jm-color-player-to 100%);
+      padding: 4vh $jm-page-x 0;
+      box-sizing: border-box;
+      @include safe-area-bottom(24rpx);
+
+      .progress {
+        padding-top: 20rpx;
+        box-sizing: border-box;
+      }
+
+      .song-name {
+        width: 100%;
+        font-size: $jm-font-body;
+        color: $jm-color-text-inverse;
+        text-align: center;
+        @include text-ellipsis;
+      }
+
+      .singer,
+      .time {
+        width: 100%;
+        font-size: $jm-font-caption;
+        color: rgba(255, 255, 255, 0.85);
+        text-align: center;
+        margin-top: 8rpx;
+      }
+
+      .control {
+        width: 60vw;
+        margin: 4vh auto 0;
+        display: flex;
+        height: 88rpx;
+        align-items: center;
+        justify-content: space-between;
+        color: $jm-color-text-inverse;
+
+        .order {
+          font-size: 44rpx;
+        }
+
+        .change {
+          font-size: 52rpx;
+        }
+
+        .play {
+          font-size: 88rpx;
+          transition: transform $jm-duration-normal $jm-ease-out;
+
+          &:active {
+            transform: scale(0.92);
+          }
+        }
+      }
+    }
+  }
+
+  .play-ui-page-show {
+    top: 0;
   }
 }
