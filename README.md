@@ -72,3 +72,13 @@ src/
 
 - 第三方 API 仅供学习，请遵守版权与平台规范
 - `project.config.json` 中的 `appid` 需替换为你自己的小程序 AppID
+
+## 性能优化（按需注入 / 用时注入）
+
+项目已开启微信小程序 [按需注入与用时注入](https://developers.weixin.qq.com/miniprogram/dev/framework/ability/lazyload.html)：
+
+- `app.config.ts`：`lazyCodeLoading: 'requiredComponents'` — 启动时只注入首页所需代码
+- 各页面 `*.config.ts`：`componentPlaceholder: { comp: 'view' }` — 组件首次渲染时再注入
+
+调试要求：微信开发者工具 ≥ 1.05.2111300，基础库 ≥ 2.20.1（`project.config.json` 中 `libVersion: 3.3.4`）。
+
