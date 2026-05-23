@@ -5,7 +5,12 @@ import {
   HTTP_ERROR
 } from '../config/index'
 
-function checkHttpStatus(response: Taro.request.SuccessCallbackResult<any>) {
+/**
+ * 检查http状态值
+ * @param response
+ * @returns {*}
+ */
+function checkHttpStatus(response: API.Response) {
   if (response.statusCode >= 200 && response.statusCode < 300) {
     return response.data
   }
@@ -16,7 +21,12 @@ function checkHttpStatus(response: Taro.request.SuccessCallbackResult<any>) {
   throw error
 }
 
-function checkSuccess(data: any, resolve: (value: any) => void) {
+/**
+ * 检查返回值是否正常
+ * @param data
+ * @returns {*}
+ */
+function checkSuccess(data: any, resolve) {
   if (data instanceof ArrayBuffer && typeof data === 'string') {
     return data
   }
@@ -33,10 +43,17 @@ function checkSuccess(data: any, resolve: (value: any) => void) {
   throw error
 }
 
-function throwError(error: any, reject: (reason?: any) => void) {
+/**
+ * 请求错误处理
+ * @param error
+ * @param reject
+ */
+function throwError(error, reject) {
   if (error.errMsg) {
-    reject('服务器正在维护中!')
-    throw new Error('服务器正在维护中!')
+    const message = '网络请求失败，请确认已执行 npm run api 并在开发者工具中关闭域名校验'
+    Taro.showToast({ title: message, icon: 'none', duration: 3000 })
+    reject(message)
+    throw new Error(message)
   }
   throw error
 }
@@ -48,7 +65,7 @@ export default {
     return new Promise((resolve, reject) => {
       Taro.request({
         ...options,
-        method: (method || 'GET') as keyof Taro.request.Method,
+        method: method || 'GET',
         url: `${BASE_URL}${url}`,
         header: {
           'content-type': 'application/x-www-form-urlencoded',

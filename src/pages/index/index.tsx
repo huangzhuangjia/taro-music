@@ -1,12 +1,19 @@
-import { Component, createRef } from 'react'
+import { Component } from 'react'
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
+import { connect } from 'react-redux'
 import CommonBar from '../../components/commonBar/index'
 import PlayDetail from '../playDetail/playDetail'
 import Recommend from '../recommend/recommend'
 import NewSong from '../newSong/newSong'
 import Album from '../album/album'
 import { getCacheData, setCacheData } from '../../utils/index'
+import {
+  fetchRecommendList,
+  fetchNewestList,
+  fetchAlbumList,
+  updateState
+} from '../../actions'
 
 import './index.scss'
 
@@ -21,16 +28,27 @@ const tabs: Array<TabItem> = [
   { id: 2, title: '新碟上架' },
 ]
 
+interface IndexProps {
+  onFetchRecommendList: (payload: { callback?: any }) => any
+  onFetchNewestList: (payload: { callback?: any }) => any
+  onFetchAlbumList: (payload: { callback?: any, initOffset?: number, isInit?: boolean }) => any
+  onUpdateState: (namespace: string, payload?: any) => any
+}
+
 interface IndexStates {
   activeTab: number
   tabs: Array<TabItem>
 }
 
-class Index extends Component<{}, IndexStates> {
-  private recommendRef = createRef<Recommend>()
-  private newSongRef = createRef<NewSong>()
-  private albumRef = createRef<Album>()
+const mapDispatchToProps = {
+  onFetchRecommendList: fetchRecommendList,
+  onFetchNewestList: fetchNewestList,
+  onFetchAlbumList: fetchAlbumList,
+  onUpdateState: updateState
+}
 
+@connect(null, mapDispatchToProps)
+class Index extends Component<IndexProps, IndexStates> {
   state = {
     activeTab: 0,
     tabs: [...tabs]
@@ -41,10 +59,28 @@ class Index extends Component<{}, IndexStates> {
   }
 
   loadInitialData() {
+    const { onFetchRecommendList, onFetchNewestList, onFetchAlbumList, onUpdateState } = this.props
     const tab = Taro.getCurrentInstance().router?.params?.tab
-    this.recommendRef.current?.getRecommendList()
-    this.newSongRef.current?.getNewest()
-    this.albumRef.current?.fetchAlbum(undefined, undefined, false, !!tab)
+
+    const recommendList = getCacheData('recommendList')
+    if (recommendList && recommendList.length > 0) {
+      onUpdateState('recommend', { recommendList })
+    } else {
+      onFetchRecommendList({})
+    }
+
+    const newestList = getCacheData('newSongList')
+    if (newestList && newestList.length > 0) {
+      onUpdateState('newSong', { newestList })
+    }
+
+    if (!tab) {
+      const albumList = getCacheData('albumList')
+      if (albumList && albumList.length > 0) {
+        onUpdateState('album', { albumList })
+      }
+      onFetchAlbumList({ isInit: false })
+    }
   }
 
   onPullDownRefresh() {
@@ -61,18 +97,18 @@ class Index extends Component<{}, IndexStates> {
 
   switchTab(index: number, init?: boolean) {
     if (this.state.activeTab === index && !init) return
-    this.setState({
-      activeTab: index
-    })
+    this.setState({ activeTab: index })
+
+    const { onFetchRecommendList, onFetchNewestList, onFetchAlbumList } = this.props
     switch (index) {
       case 0:
-        !this.isCache().recommend && this.recommendRef.current?.fetchRecommendList()
+        !this.isCache().recommend && onFetchRecommendList({})
         break
       case 1:
-        !this.isCache().newSong && this.newSongRef.current?.fetchNewest()
+        !this.isCache().newSong && onFetchNewestList({})
         break
       case 2:
-        this.albumRef.current?.fetchAlbum(undefined, undefined, false, true)
+        onFetchAlbumList({ isInit: false })
         break
       default:
         break
@@ -84,19 +120,21 @@ class Index extends Component<{}, IndexStates> {
   }
 
   refresh() {
+    const { onFetchRecommendList, onFetchNewestList, onFetchAlbumList } = this.props
     const activeTab = this.state.activeTab
+
     switch (activeTab) {
       case 0:
         setCacheData('recommendList', [])
-        this.recommendRef.current?.fetchRecommendList(this.stopPullDownRefresh)
+        onFetchRecommendList({ callback: this.stopPullDownRefresh })
         break
       case 1:
         setCacheData('newSongList', [])
-        this.newSongRef.current?.fetchNewest(this.stopPullDownRefresh)
+        onFetchNewestList({ callback: this.stopPullDownRefresh })
         break
       case 2:
         setCacheData('albumList', [])
-        this.albumRef.current?.fetchAlbum(this.stopPullDownRefresh, 0, true)
+        onFetchAlbumList({ callback: this.stopPullDownRefresh, initOffset: 0, isInit: true })
         break
       default:
         break
@@ -119,13 +157,13 @@ class Index extends Component<{}, IndexStates> {
           <View className='home-tab-wrapper'>
             <View className='swiper-wrapper'>
               <View className='swiper-slide' hidden={this.state.activeTab !== 0}>
-                <Recommend ref={this.recommendRef} />
+                <Recommend />
               </View>
               <View className='swiper-slide' hidden={this.state.activeTab !== 1}>
-                <NewSong ref={this.newSongRef} />
+                <NewSong />
               </View>
               <View className='swiper-slide' hidden={this.state.activeTab !== 2}>
-                <Album ref={this.albumRef} />
+                <Album />
               </View>
             </View>
           </View>
