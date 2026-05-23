@@ -1,6 +1,8 @@
 @use '../styles/variables' as *;
 
 page {
+  height: 100%;
+  min-height: 100vh;
   font-family: $jm-font-family;
   font-size: $jm-font-body;
   color: $jm-color-text;
