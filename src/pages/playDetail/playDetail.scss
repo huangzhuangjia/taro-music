@@ -11,17 +11,22 @@
 }
 
 .page-ui-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+  z-index: $jm-z-player;
   pointer-events: none;
+  overflow: hidden;
 
   .play-ui-page {
     width: 100%;
     height: 100%;
     position: absolute;
     left: 0;
-    top: 100%;
-    z-index: $jm-z-player;
+    top: 100vh;
+    z-index: 1;
     background: $jm-color-bg;
     overflow: hidden;
     transition: top $jm-duration-normal $jm-ease-out;
