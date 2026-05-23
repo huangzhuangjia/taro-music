@@ -1,0 +1,37 @@
+@use './variables' as *;
+
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin pressable-row {
+  transition: background $jm-duration-normal $jm-ease-out;
+
+  &:active {
+    background: $jm-color-primary-soft;
+  }
+}
+
+@mixin playing-row {
+  background: $jm-color-primary-soft;
+  position: relative;
+
+  &::before {
+    content: '\e6a9';
+    font-family: iconfont;
+    position: absolute;
+    right: $jm-page-x;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    color: $jm-color-primary;
+    font-size: 40rpx;
+  }
+}
+
+@mixin safe-area-bottom($extra: 0rpx) {
+  padding-bottom: calc(#{$extra} + #{$jm-safe-bottom});
+}

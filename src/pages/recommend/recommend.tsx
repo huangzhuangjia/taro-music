@@ -19,10 +19,10 @@ const mapStateToProps = ({ recommend, loading }) => ({
   recommendList: recommend.recommendList,
   loading: loading.effects['recommend/fetchRecommendList']
 })
-const mapDispatchToProps = {
+const mapDispatchToProps = ({
   onFetchRecommendList: fetchRecommendList,
   onUpdateState: updateState
-}
+})
 
 @connect(mapStateToProps, mapDispatchToProps)
 class Recommend extends Component<RecommendProps, {}> {
@@ -99,7 +99,7 @@ class Recommend extends Component<RecommendProps, {}> {
                 <Text className='desc'>{recommendList[0].copywriter || ''}</Text>
                 <View onClick={this.navigateTo.bind(this,`/pages/listDetail/listDetail?id=${recommendList[0].id}`)}>
                   <View className='play-btn'>
-                    <View className='iconfont icon-bofang1'></View><Text>去看看</Text>
+                    <View className='iconfont icon-bofang1'></View><Text>进入歌单</Text>
                   </View>
                 </View>
               </View>

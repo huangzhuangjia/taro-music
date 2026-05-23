@@ -8,36 +8,41 @@ import Loading from '../../components/loading'
 import './album.scss'
 
 interface AlbumProps {
-  onFetchAlbumList: (payload: { callback?: any, initOffset?: number, isInit?: boolean }) => any
-  onUpdateState: (namespace: string, payload: any) => any
-  album: StoreState.AlbumState
-  loading: boolean
+  onFetchAlbumList: (payload: { callback?: any, initOffset?: number, isInit?: boolean }) => any;
+  onUpdateState: (namespace: string, payload: any) => any;
+  album: StoreState.AlbumState;
+  loading: boolean;
 }
 
 const mapStateToProps = ({ album, loading }) => ({
   album,
   loading: loading.effects['album/fetchAlbumList']
 })
-
-const mapDispatchToProps = {
-  onFetchAlbumList: fetchAlbumList,
+const mapDispatchToProps = ({
+  onFetchAlbumList:fetchAlbumList,
   onUpdateState: updateState
-}
+})
 
 @connect(mapStateToProps, mapDispatchToProps)
 class Album extends Component<AlbumProps, {}> {
   static options = {
     addGlobalClass: true
   }
-
+  /**
+   * 获取新碟数据
+   * @param callback 回调
+   * @param initOffset 初始页码
+   * @param isInit 是否初始化
+   * @param isUnLoad 是否不加载请求数据
+   */
   fetchAlbum(callback?: any, initOffset?: number, isInit?: boolean, isUnLoad?: boolean) {
     if (isUnLoad) return
     this.props.onFetchAlbumList({ callback, initOffset, isInit })
   }
 
   loadingMore() {
-    const { onUpdateState, loading, album } = this.props
-    const { offset } = album
+    let { onUpdateState, loading, album } = this.props,
+        { offset } = album
     if (loading) return
     onUpdateState('album', { offset: offset + 1 })
     setTimeout(() => {
@@ -45,28 +50,25 @@ class Album extends Component<AlbumProps, {}> {
     })
   }
 
-  navigateTo(url: string) {
-    Taro.navigateTo({ url })
+  navigateTo(url) {
+    Taro.navigateTo({url: url})
   }
 
   render() {
-    const album = this.props.album || { albumList: [], total: 0 }
-    const { albumList, total } = album
-
-    if (this.props.loading && albumList.length === 0) {
-      return <Loading />
+    let { albumList, total } = this.props.album
+    if (this.props.loading) {
+      return <Loading/>
     }
-
     return (
       <View className='album'>
         <ScrollView
           scrollY
-          scrollTop={0}
-          lowerThreshold={150}
+          scrollTop='0'
+          lowerThreshold='150'
           enableBackToTop
-          onScrollToLower={this.loadingMore.bind(this)}
+          onScrollToLower={this.loadingMore}
           className='item-list'>
-          {
+        {
             albumList.map((data, k) => {
               return (
                 <View onClick={this.navigateTo.bind(this, `/pages/albumDetail/albumDetail?id=${data.id}`)} key={k}>
@@ -84,8 +86,8 @@ class Album extends Component<AlbumProps, {}> {
             })
           }
           {
-            (albumList.length === total && albumList.length > 0) ?
-              <View className='loadingend'>没有了~~</View> : null
+            (albumList.length == total && albumList.length > 0) ?
+              <View className='loadingend'>已经到底了</View> : null
           }
         </ScrollView>
       </View>

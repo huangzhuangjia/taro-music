@@ -1,119 +1,152 @@
-.play-list-dialog{
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.play-list-dialog {
   width: 100%;
   height: 100%;
   position: fixed;
-  left: 0px;
+  left: 0;
   top: -200vh;
-  z-index: 1000;
-  .mask{
+  z-index: $jm-z-player;
+
+  .mask {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,.3);
+    background: $jm-color-mask;
     opacity: 0;
-    transition: all 250ms ease-in-out;
-    -webkit-app-region: no-drag;
+    transition: opacity $jm-duration-normal $jm-ease-out;
   }
-  .list-wrap{
+
+  .list-wrap {
     width: 100%;
     height: 60vh;
     position: absolute;
-    left: 0px;
+    left: 0;
     bottom: -60vh;
-    background: #FFF;
-    transition: all 250ms ease-in-out;
-    -webkit-app-region: no-drag;
-    .list-wrap-head{
+    background: $jm-color-surface;
+    border-radius: $jm-radius-lg $jm-radius-lg 0 0;
+    transition: bottom $jm-duration-normal $jm-ease-out;
+
+    .list-wrap-head {
       width: 100%;
-      height: 80px;
+      height: 88rpx;
       display: flex;
-      padding: 0px 28px;
+      padding: 0 $jm-page-x;
       justify-content: space-between;
       align-items: center;
-      border-bottom: solid 2px #F9F9F9;
-      box-sizing:border-box;
-      .label{
-        font-size: 24px;
+      border-bottom: 1rpx solid $jm-color-divider;
+      box-sizing: border-box;
+
+      .label {
+        font-size: $jm-font-body;
+        color: $jm-color-text;
         display: flex;
-        .iconfont{
-          font-size: 32px;
-          margin-right: 4px;
+        align-items: center;
+
+        .iconfont {
+          font-size: $jm-font-title;
+          margin-right: 8rpx;
+          color: $jm-color-primary;
         }
       }
-      .clear{
-        font-size: 32px;
-        color: #999;
-        cursor: pointer;
+
+      .clear {
+        font-size: $jm-font-title;
+        color: $jm-color-text-secondary;
+        padding: $jm-space-xs;
       }
     }
-    .list-item{
+
+    .list-item {
       width: 100%;
-      height: calc(100% - 40px);
-      box-sizing:border-box;
-      padding-bottom:110rpx;
-      .row{
+      height: calc(100% - 88rpx - 88rpx);
+      box-sizing: border-box;
+      padding-bottom: $jm-safe-bottom;
+
+      .row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        cursor: default;
-        transition: all 250ms ease;
-        .info{
-          display: flex;
-          align-items: center;
-          width: calc(100% - 50px);
+        transition: background $jm-duration-normal $jm-ease-out;
+
+        &:active {
+          background: $jm-color-primary-soft;
+        }
+
+        .info {
+          flex: 1;
+          min-width: 0;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          font-size: 24px;
-          padding: 15px 0px 15px 28px;
-          span{
-            font-size: 24px;
-            color: #999;
+          font-size: $jm-font-body;
+          color: $jm-color-text;
+          padding: $jm-space-sm 0 $jm-space-sm $jm-page-x;
+
+          text {
+            font-size: $jm-font-caption;
+            color: $jm-color-text-secondary;
           }
         }
-        .del{
-          width: 90px;
+
+        .del {
+          width: 88rpx;
           display: flex;
           justify-content: center;
           align-items: center;
-          font-size: 26px;
-          color: #999;
+          font-size: $jm-font-body;
+          color: $jm-color-text-secondary;
         }
       }
-      .row-playing{
-        background: #F0F0F0;
-        .info{
-          span{
-            font-weight: bold;
-          }
-          &:before{
+
+      .row-playing {
+        background: $jm-color-primary-soft;
+
+        .info {
+          color: $jm-color-primary;
+          font-weight: 500;
+
+          &::before {
             content: '\e6a9';
             font-family: iconfont;
             font-weight: normal;
-            margin-right: 20px;
-            font-size: 30px;
+            margin-right: 12rpx;
+            font-size: 32rpx;
+            color: $jm-color-primary;
+          }
+
+          text {
+            color: $jm-color-text-secondary;
+            font-weight: 400;
           }
         }
       }
     }
+
     .list-wrap-foot {
       position: absolute;
       bottom: 0;
-      padding: 15px;
-      text-align: center;
+      left: 0;
       width: 100%;
-      border-top: solid 1px #F9F9F9;
-      cursor: pointer;
-      font-size: 24px;
-      background: #fff;
+      padding: $jm-space-sm;
+      text-align: center;
+      font-size: $jm-font-body;
+      color: $jm-color-text-secondary;
+      background: $jm-color-surface;
+      border-top: 1rpx solid $jm-color-divider;
+      @include safe-area-bottom($jm-space-sm);
     }
   }
-  .mask-active{
+
+  .mask-active {
     opacity: 1;
   }
-  .list-wrap-active{
-    bottom: 0px;
+
+  .list-wrap-active {
+    bottom: 0;
   }
 }
-.play-list-dialog-active{
-  top: 0px;
+
+.play-list-dialog-active {
+  top: 0;
 }

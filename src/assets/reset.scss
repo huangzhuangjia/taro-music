@@ -1,23 +1,20 @@
+@use '../styles/variables' as *;
+
+page {
+  font-family: $jm-font-family;
+  font-size: $jm-font-body;
+  color: $jm-color-text;
+  background-color: $jm-color-bg;
+  box-sizing: border-box;
+}
+
+view,
+text,
+image {
+  box-sizing: border-box;
+}
+
 ::-webkit-scrollbar {
-  width: 0px;
-  height: 5px;
-  background-color: #f0f0f0;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #999;
-}
-
-::-webkit-scrollbar-track {
-  background-color: unset;
-}
-
-::selection {
-  background: #858585;
-  color: #FFF;
-}
-
-::-moz-selection {
-  background: #858585;
-  color: #FFF;
+  width: 0;
+  height: 0;
 }

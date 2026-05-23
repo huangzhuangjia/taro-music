@@ -1,0 +1,59 @@
+// JMusic · 沉韵 Slate Resonance
+$jm-color-primary: #E06452;
+$jm-color-primary-dark: #C94E3D;
+$jm-color-primary-soft: rgba(224, 100, 82, 0.12);
+
+$jm-color-bg: #F6F7F9;
+$jm-color-surface: #FFFFFF;
+$jm-color-divider: #EBEDF0;
+$jm-color-border: #E2E4E8;
+
+$jm-color-text: #2C2C2C;
+$jm-color-text-secondary: #8A8F98;
+$jm-color-text-tertiary: #B8BCC4;
+$jm-color-text-inverse: #FFFFFF;
+
+$jm-color-mask: rgba(0, 0, 0, 0.45);
+$jm-color-tag: rgba(0, 0, 0, 0.55);
+
+$jm-color-player-from: #4A4F5C;
+$jm-color-player-to: #2E3238;
+$jm-color-progress-track: rgba(255, 255, 255, 0.25);
+$jm-color-progress-fill: #FFFFFF;
+
+$theme: $jm-color-primary;
+
+$jm-font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue',
+  Helvetica, sans-serif;
+
+$jm-font-display: 40rpx;
+$jm-font-title: 32rpx;
+$jm-font-body: 28rpx;
+$jm-font-caption: 24rpx;
+$jm-font-micro: 22rpx;
+$jm-font-tab: 28rpx;
+
+$jm-space-2xs: 8rpx;
+$jm-space-xs: 16rpx;
+$jm-space-sm: 24rpx;
+$jm-space-md: 32rpx;
+$jm-space-lg: 48rpx;
+
+$jm-page-x: 32rpx;
+$jm-list-bottom: 160rpx;
+
+$jm-radius-sm: 8rpx;
+$jm-radius-md: 12rpx;
+$jm-radius-lg: 16rpx;
+
+$jm-shadow-sm: 0 4rpx 16rpx rgba(44, 44, 44, 0.06);
+$jm-shadow-md: 0 8rpx 28rpx rgba(44, 44, 44, 0.1);
+$jm-shadow-cover: 0 12rpx 40rpx rgba(44, 44, 44, 0.14);
+
+$jm-z-bar: 100;
+$jm-z-player: 1000;
+
+$jm-duration-normal: 250ms;
+$jm-ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+
+$jm-safe-bottom: env(safe-area-inset-bottom);

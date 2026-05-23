@@ -1,107 +1,108 @@
-$theme: #666;
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
 .fix-control {
   width: 100%;
-  // height: 100px;
-  background: #FFF;
+  background: $jm-color-surface;
   position: fixed;
-  bottom: 0px;
-  left: 0px;
-  z-index: 999;
-  box-shadow: 0px -6px 24px rgba(0, 0, 0, 0.05);
+  bottom: 0;
+  left: 0;
+  z-index: $jm-z-bar;
+  box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.06);
   display: none;
+  align-items: center;
+  min-height: 128rpx;
+  @include safe-area-bottom(16rpx);
+
   .play-bar {
     width: 100%;
-    height: 3px;
-    background: #FFF;
+    height: 4rpx;
+    background: $jm-color-divider;
     position: absolute;
-    left: 0px;
-    bottom: 0px;
+    left: 0;
+    top: 0;
+
     .curBar {
-      width: 0%;
-      height: 3px;
-      background: $theme;
+      height: 4rpx;
+      background: $jm-color-primary;
+      transition: width 0.2s linear;
     }
   }
+
   .cover {
-    width: 10vw;
-    height: 10vw;
-    padding: 20px;
+    flex-shrink: 0;
+    padding: $jm-space-sm 0 $jm-space-sm $jm-page-x;
+
     image {
       display: block;
-      width: 10vw;
-      height: 10vw;
-      border: .5vw solid #fff;
+      width: 96rpx;
+      height: 96rpx;
+      border: 2rpx solid $jm-color-surface;
       border-radius: 50%;
-      box-shadow:0 8rpx 36rpx 0 rgba(73, 73, 73, 0.4);
-    }
-    @keyframes imgRotate{
-      0% {transform: rotate(0deg);}
-      50% {transform: rotate(180deg);}
-      100% {transform: rotate(360deg);}
+      box-shadow: $jm-shadow-sm;
+      background: $jm-color-border;
     }
   }
+
   .info {
-    width: calc(100% - 250px - 48px - 40px);
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    padding: 5px 12px 7px 4px;
-    -webkit-app-region: no-drag;
+    justify-content: center;
+    padding: $jm-space-sm $jm-space-xs;
+
     .name {
-      font-size: 26px;
-      color: #333;
-      width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-size: $jm-font-body;
+      color: $jm-color-text;
+      @include text-ellipsis;
     }
+
     .singer {
-      font-size: 22px;
-      color: #999;
-      width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-size: $jm-font-caption;
+      color: $jm-color-text-secondary;
+      margin-top: 4rpx;
+      @include text-ellipsis;
     }
   }
+
   .play-icon {
-    width: 12vw;
-    height: 12vw;
-    cursor: auto;
-    -webkit-app-region: no-drag;
+    flex-shrink: 0;
+    width: 96rpx;
+    height: 96rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
-    .icon{
-      width: 16vw;
-      height: 16vw;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: $theme;
-      font-size: 42px;
+
+    .icon {
+      color: $jm-color-primary;
+      font-size: 56rpx;
+      z-index: 1;
     }
-    .progress{
-      width: 10vw;
-      height: 10vw;
+
+    .progress {
+      width: 72rpx;
+      height: 72rpx;
       position: absolute;
-      left: 2.6vw;
-      top: 3vw;
-      border: 1px solid #ccc;
+      border: 2rpx solid $jm-color-border;
       border-radius: 50%;
     }
   }
-  .play-list{
-    width: 100px;
-    padding: 0 10px 0 15px;
-    height: 120px;
+
+  .play-list {
+    flex-shrink: 0;
+    width: 88rpx;
+    height: 96rpx;
     display: flex;
-    justify-content: center;
     align-items: center;
-    color: #666;
-    font-size: 42px;
-    cursor: pointer;
-    -webkit-app-region: no-drag;
+    justify-content: center;
+    color: $jm-color-text-secondary;
+    font-size: 44rpx;
+    padding-right: $jm-space-xs;
   }
 }
-.fix-control-active{
+
+.fix-control-active {
   display: flex;
 }

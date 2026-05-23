@@ -1,89 +1,93 @@
-$theme: #666;
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
 .album {
   width: 100%;
   height: 100%;
-  padding: 10px 0px 18px;
+
   .item-list {
     width: 100%;
     height: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: $jm-space-md;
+    padding: $jm-space-sm $jm-page-x;
+    padding-bottom: $jm-list-bottom;
     box-sizing: border-box;
-    padding-bottom: 138px;
-    padding-top: 10px;
+
     .album-itembox {
-      width: 50%;
-      padding: 16px 36px;
-      height: 48vw;
+      width: calc((100% - #{$jm-space-md}) / 2);
+      flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      cursor: pointer;
-      -webkit-app-region: no-drag;
-      transition: all 250ms ease;
-      float: left;
-      box-sizing: border-box;
-      &:hover {
-        .cover {
-          &:before {
-            right: -48px;
-          }
-        }
+      transition: opacity $jm-duration-normal $jm-ease-out;
+
+      &:active {
+        opacity: 0.85;
       }
+
       .cover {
-        width: 30vw;
-        height: 30vw;
+        width: 100%;
+        padding-bottom: 100%;
+        height: 0;
         position: relative;
-        &:before {
+        overflow: visible;
+
+        &::before {
           content: '';
-          display: block;
-          width: 30vw;
-          height: 30vw;
-          background: #333;
+          width: 88%;
+          padding-bottom: 88%;
+          background: $jm-color-player-from;
           border-radius: 50%;
           position: absolute;
-          right: -35px;
+          right: -16rpx;
           top: 50%;
-          margin-top: -15vw;
-          transition: all 250ms ease-out;
+          transform: translateY(-50%);
+          opacity: 0.12;
+          z-index: 0;
         }
+
         image {
           display: block;
           width: 100%;
           height: 100%;
           position: absolute;
-          left: 0px;
-          top: 0px;
-          z-index: 9;
-          box-shadow: 0px 2px 6px 0px rgba(73, 73, 73, 0.1);
-          background: #FFF;
+          left: 0;
+          top: 0;
+          z-index: 1;
+          border-radius: $jm-radius-sm;
+          box-shadow: $jm-shadow-sm;
+          background: $jm-color-border;
         }
       }
+
       .info {
         width: 100%;
-        padding: 20px 0px 0px;
+        padding-top: $jm-space-xs;
         box-sizing: border-box;
+
         .name {
-          width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 28px;
-          line-height: 1.6;
+          font-size: $jm-font-title;
+          color: $jm-color-text;
+          @include text-ellipsis;
         }
+
         .singer {
-          width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 24px;
-          color: #999;
-          display: flex;
-          i {
-            margin-right: 4px;
-            align-items: center;
-          }
+          font-size: $jm-font-caption;
+          color: $jm-color-text-secondary;
+          margin-top: 4rpx;
+          @include text-ellipsis;
         }
       }
+    }
+
+    .loadingend {
+      width: 100%;
+      padding: $jm-space-lg 0;
+      text-align: center;
+      color: $jm-color-text-tertiary;
+      font-size: $jm-font-caption;
     }
   }
 }
