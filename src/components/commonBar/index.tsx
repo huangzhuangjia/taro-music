@@ -1,4 +1,5 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { connect } from 'react-redux'
 import shuffleArray from 'shuffle-array'
@@ -366,7 +367,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
   render() {
     let { main } = this.props
     let { playListState, playList, transform } = this.state
-    if (!main) return
+    if (!main) return null
     let songInfo = main.songInfo
     const hasActiveSong = Boolean(main.currentSong && main.currentSong.id)
 
