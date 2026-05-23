@@ -1,29 +1,18 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
-@keyframes imgRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes jm-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+// Apple Now Playing：沿用绝对定位三区（封面 / 歌词 / 面板），避免 flex 塌陷
 
 .page-ui-wrapper {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   z-index: $jm-z-player;
   pointer-events: none;
   overflow: hidden;
+  font-family: $jm-font-family;
 
   .play-ui-page {
     width: 100%;
@@ -34,29 +23,42 @@
     z-index: 1;
     background: $jm-color-bg;
     overflow: hidden;
-    transition: top $jm-duration-normal $jm-ease-out;
+    transition: top $jm-duration-slow $jm-ease-spring;
     pointer-events: auto;
+
+    &-bg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      transform: scale(1.15);
+      filter: blur(64px) saturate(160%);
+      opacity: 0.32;
+      z-index: 0;
+    }
 
     .windowsHead {
       position: absolute;
       left: 0;
       top: 0;
       width: 100%;
-      z-index: 9;
-      padding: 24rpx $jm-page-x;
-      padding-top: calc(24rpx + env(safe-area-inset-top));
+      z-index: 10;
       display: flex;
-      align-items: center;
+      justify-content: center;
+      padding-top: calc(16rpx + env(safe-area-inset-top));
       box-sizing: border-box;
 
       .back {
         width: 72rpx;
-        height: 72rpx;
+        height: 48rpx;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 40rpx;
+        font-size: 36rpx;
         color: $jm-color-text-secondary;
+        background: rgba(255, 255, 255, 0.75);
+        border-radius: $jm-radius-pill;
       }
 
       .dragbar {
@@ -64,166 +66,127 @@
       }
     }
 
-    .head {
-      position: absolute;
-      left: 0;
-      top: 30rpx;
-      width: 100%;
-      height: 88rpx;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      z-index: 9;
-      padding-right: $jm-page-x;
-
-      .menu {
-        width: 88rpx;
-        height: 88rpx;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: $jm-color-text-secondary;
-        font-size: 36rpx;
-      }
-    }
-
     .cover {
-      width: 56vw;
-      height: 56vw;
-      border-radius: 50%;
       position: absolute;
       left: 50%;
-      top: 12vh;
+      top: calc(96rpx + env(safe-area-inset-top));
+      width: 68vw;
+      height: 68vw;
+      max-width: 560rpx;
+      max-height: 560rpx;
       transform: translateX(-50%);
-      border: 4rpx solid $jm-color-surface;
-      box-shadow: $jm-shadow-cover;
-      z-index: 11;
+      z-index: 2;
+      border-radius: $jm-radius-artwork;
       overflow: hidden;
+      box-shadow: $jm-shadow-cover;
 
-      image {
+      &__img {
         display: block;
         width: 100%;
         height: 100%;
-        border-radius: 50%;
-      }
-
-      .bar-wrap {
-        width: 100%;
-        height: 100%;
-        position: relative;
-
-        .dot-wrap {
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          left: 0;
-          top: 0;
-          transform-origin: center;
-          z-index: 12;
-
-          .dot {
-            width: 16rpx;
-            height: 16rpx;
-            background: $jm-color-primary;
-            border-radius: 50%;
-            position: absolute;
-            left: 50%;
-            top: 0;
-            transform: translate(-50%, -50%);
-          }
-        }
+        background: $jm-color-surface-inset;
       }
     }
 
     .lyric-box {
-      width: 100%;
       position: absolute;
       left: 0;
-      bottom: 40vh;
-      font-size: $jm-font-caption;
+      right: 0;
+      top: calc(96rpx + env(safe-area-inset-top) + 68vw + 32rpx);
+      max-width: 560rpx;
+      margin: 0 auto;
+      width: 68vw;
+      bottom: calc(38vh + 24rpx);
+      z-index: 2;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
 
       .lyric-item {
         text-align: center;
-        padding: 10rpx 48rpx;
+        padding: 8rpx 16rpx;
         display: none;
-        transition: all 0.4s $jm-ease-out;
+        font-size: $jm-font-caption;
+        color: $jm-color-text-tertiary;
+        transition: color 0.3s ease, opacity 0.3s ease;
       }
 
       .ready {
         display: block;
         color: $jm-color-text-secondary;
-        opacity: 0.55;
-        font-size: $jm-font-caption;
+        opacity: 0.6;
       }
 
       .select {
         display: block;
         color: $jm-color-text;
-        font-size: 30rpx;
+        font-size: $jm-font-body;
         font-weight: 600;
         opacity: 1;
       }
     }
 
-    .wave {
-      width: 100%;
-      height: 100vh;
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      pointer-events: none;
-
-      canvas {
-        width: 100%;
-        height: 100%;
-      }
-    }
-
     .player-panel {
-      width: 100%;
-      height: 38vh;
       position: absolute;
       left: 0;
+      right: 0;
       bottom: 0;
-      z-index: 9;
-      background: linear-gradient(180deg, $jm-color-player-from 0%, $jm-color-player-to 100%);
-      padding: 4vh $jm-page-x 0;
+      height: 38vh;
+      min-height: 420rpx;
+      z-index: 3;
+      padding: $jm-space-md $jm-page-x 0;
       box-sizing: border-box;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: $jm-radius-xl $jm-radius-xl 0 0;
+      box-shadow: 0 -8rpx 32rpx rgba(0, 0, 0, 0.06);
       @include safe-area-bottom(24rpx);
-
-      .progress {
-        padding-top: 20rpx;
-        box-sizing: border-box;
-      }
 
       .song-name {
         width: 100%;
-        font-size: $jm-font-body;
-        color: $jm-color-text-inverse;
+        font-size: $jm-font-title;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: $jm-color-text;
         text-align: center;
         @include text-ellipsis;
       }
 
-      .singer,
-      .time {
+      .singer {
         width: 100%;
-        font-size: $jm-font-caption;
-        color: rgba(255, 255, 255, 0.85);
+        font-size: $jm-font-body;
+        color: $jm-color-text-secondary;
         text-align: center;
         margin-top: 8rpx;
+        @include text-ellipsis;
+      }
+
+      .progress {
+        margin-top: $jm-space-md;
+      }
+
+      .time {
+        width: 100%;
+        font-size: $jm-font-micro;
+        color: $jm-color-text-secondary;
+        text-align: center;
+        margin-top: 8rpx;
+        font-variant-numeric: tabular-nums;
       }
 
       .control {
-        width: 60vw;
-        margin: 4vh auto 0;
+        width: 72vw;
+        max-width: 560rpx;
+        margin: $jm-space-md auto 0;
         display: flex;
-        height: 88rpx;
+        height: 96rpx;
         align-items: center;
         justify-content: space-between;
-        color: $jm-color-text-inverse;
+        color: $jm-color-text;
 
         .order {
           font-size: 44rpx;
+          color: $jm-color-text-secondary;
         }
 
         .change {
@@ -232,11 +195,16 @@
 
         .play {
           font-size: 88rpx;
-          transition: transform $jm-duration-normal $jm-ease-out;
+          color: $jm-color-primary;
 
           &:active {
-            transform: scale(0.92);
+            opacity: 0.75;
           }
+        }
+
+        .icon-liebiao {
+          font-size: 44rpx;
+          color: $jm-color-text-secondary;
         }
       }
     }
