@@ -1,6 +1,7 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, ScrollView, Image } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect } from 'react-redux'
 import { getPlayList } from '../../services'
 import eventEmitter from '../../utils/eventEmitter'
 import * as Events from '../../constants/event-types'
@@ -12,80 +13,84 @@ import Loading from '../../components/loading'
 import './listDetail.scss'
 
 interface ListDetailProps {
-  main: StoreState.MainState;
-  onFetchSongById: (payload: { id: number, restore: boolean }) => any
+  main: StoreState.MainState
+  onFetchSongById: (payload: { id: number, restore?: boolean }) => any
 }
+
 interface ListDetailStates {
-  listData: any;
-  scrollState: boolean,
+  listData: any
+  scrollState: boolean
   loading: boolean
 }
+
 const mapStateToProps = ({ main }) => ({
   main
 })
-const mapDispatchToProps = ({
+
+const mapDispatchToProps = {
   onFetchSongById: fetchSongById
-})
+}
 
 @connect(mapStateToProps, mapDispatchToProps)
 class ListDetail extends Component<ListDetailProps, ListDetailStates> {
-  static options = {
-    addGlobalClass: true
-  }
-  constructor() {
-    super(...arguments)
+  constructor(props: ListDetailProps) {
+    super(props)
     this.state = {
       listData: {},
       scrollState: false,
       loading: true
     }
   }
-  componentWillPreload(params) {
-    return getPlayList({
-      id: params.id
-    })
+
+  componentDidShow() {
+    const commonBar = this.refs.commonBar as any
+    commonBar && commonBar.registerAsPlayerHost && commonBar.registerAsPlayerHost()
   }
+
   componentDidMount() {
     this.fetchListDetail()
   }
+
   fetchListDetail() {
-    this.$preloadData.then(res => {
+    const params = Taro.getCurrentInstance().router?.params
+    const id = params?.id
+    if (!id) {
+      this.setState({ loading: false })
+      return
+    }
+    getPlayList({ id }).then(res => {
       if (res.code === 200) {
         this.setState({
           listData: res.playlist,
           loading: false
         })
+      } else {
+        this.setState({ loading: false })
       }
+    }).catch(() => {
+      this.setState({ loading: false })
     })
   }
-  playSongById(id, restore) {
+
+  playSongById(id: number, restore?: boolean) {
     this.props.onFetchSongById({ id, restore })
   }
+
   scroll(event) {
-    let top = event.detail.scrollTop
+    const top = event.detail.scrollTop
     if (top > 200) {
       if (!this.state.scrollState) {
-        this.setState({
-          scrollState: true,
-        })
+        this.setState({ scrollState: true })
       }
-    } else {
-      if (this.state.scrollState) {
-        this.setState({
-          scrollState: false,
-        })
-      }
+    } else if (this.state.scrollState) {
+      this.setState({ scrollState: false })
     }
   }
 
-  goBack() {
-    Taro.navigateBack()
-    // Taro.redirectTo({url: '/pages/index/index'})
-  }
   saveToList() {
-    let tracks = this.state.listData.tracks || []
-    let item: Array<StoreState.playItemState> = []
-    tracks.map((data) => {
+    const tracks = this.state.listData.tracks || []
+    const item: Array<StoreState.playItemState> = []
+    tracks.forEach((data) => {
       item.push({
         id: data.id,
         name: data.name || '',
@@ -96,23 +101,23 @@ class ListDetail extends Component<ListDetailProps, ListDetailStates> {
     })
     eventEmitter.trigger(Events.BATCHADD, item)
   }
+
   render() {
-    let { listData, loading } = this.state
-    let tracks = listData.tracks || []
-    let currentSong = this.props.main.currentSong || {}
-    let winHeight = Taro.getSystemInfoSync().windowHeight
+    const { listData, loading } = this.state
+    const tracks = listData.tracks || []
+    const currentSong = this.props.main.currentSong || {}
+    const winHeight = Taro.getWindowInfo().windowHeight
+
     if (loading) {
-      return <Loading/>
+      return <Loading />
     }
+
     return (
       <View className='listDetail-wrapper wrapper'>
-        {/* <View className={`windowsHead ${scrollState ? 'windowsHead-shadow' : 'windowsHead-transparent'}`}> */}
-          {/* <View className='back iconfont icon-fanhui' onClick={this.goBack.bind(this)}></View> */}
-        {/*  </View> */}
         <ScrollView
           scrollY
-          scrollTop='0'
-          onScroll={this.scroll}
+          scrollTop={0}
+          onScroll={this.scroll.bind(this)}
           className='wrap'
           style={{ height: `${winHeight}px` }}>
           <View className='listCoverBanner'>
@@ -142,7 +147,7 @@ class ListDetail extends Component<ListDetailProps, ListDetailStates> {
           </View>
         </ScrollView>
         <PlayDetail />
-        <CommonBar />
+        <CommonBar ref='commonBar' />
       </View>
     )
   }

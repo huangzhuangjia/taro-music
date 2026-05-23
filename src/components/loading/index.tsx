@@ -1,4 +1,4 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
 import { View, Image } from '@tarojs/components'
 import loading from './assets/loading.gif'
 import './index.scss'
@@ -12,4 +12,3 @@ export default class Loading extends Component {
     )
   }
 }
-

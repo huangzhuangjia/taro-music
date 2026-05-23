@@ -1,13 +1,15 @@
+@use '../../styles/variables' as *;
 
 .comp-loading {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 120px;
+  height: 240rpx;
 }
 
 .comp-loading__img {
-  width: 60px;
-  height: 60px;
+  width: 80rpx;
+  height: 80rpx;
+  opacity: 0.85;
 }

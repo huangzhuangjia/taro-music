@@ -1,149 +1,153 @@
-$theme: #666;
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
 .listDetail-wrapper {
   width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  .windowsHead {
-    position: fixed;
-  }
+  min-height: 100vh;
+  background: $jm-color-bg;
+
   .wrap {
     width: 100%;
-    height: 100%;
-    overflow-y: auto;
+    min-height: 100vh;
   }
+
   .listCoverBanner {
     width: 100%;
-    height: 48vh;
+    height: 480rpx;
     position: relative;
-    .play {
-      position: absolute;
-      right: 0px;
-      bottom: -55px;
-      width: 3rem;
-      height: 3rem;
-      background: $theme;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #FFF;
-      padding-left: 4px;
-      font-size: 55px;
-      cursor: pointer;
-      -webkit-app-region: no-drag;
-      z-index: 9;
-      &:hover{
-        &:after{
-          transform: translate(0%, -50%);
-          opacity: 1;
-        }
-      }
-    }
+
     .cover {
       width: 100%;
       height: 100%;
       overflow: hidden;
+
       image {
         display: block;
         width: 100%;
+        height: 100%;
+        background: $jm-color-border;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 120rpx;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.25));
+        pointer-events: none;
+      }
+    }
+
+    .play {
+      position: absolute;
+      right: $jm-page-x;
+      bottom: -48rpx;
+      width: 96rpx;
+      height: 96rpx;
+      border-radius: 50%;
+      background: $jm-color-primary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $jm-color-text-inverse;
+      font-size: 48rpx;
+      box-shadow: $jm-shadow-md;
+      z-index: 9;
+
+      &:active {
+        background: $jm-color-primary-dark;
       }
     }
   }
+
   .listInfo {
     width: 100%;
-    padding: 60px 60px 30px;
-    box-sizing:border-box;
+    padding: 72rpx $jm-page-x $jm-space-md;
+    background: $jm-color-surface-raised;
+    box-sizing: border-box;
+
     .name {
-      font-size: 28px;
-      font-weight: bold;
-      line-height: 1.6;
+      font-size: $jm-font-title;
+      font-weight: 600;
+      color: $jm-color-text;
+      line-height: 1.4;
     }
+
     .desc {
-      font-size: 24px;
-      color: #999;
-      margin-top: 12px;
-      line-height: 1.6;
-      max-height: 76px;
+      font-size: $jm-font-caption;
+      color: $jm-color-text-secondary;
+      margin-top: $jm-space-xs;
+      line-height: 1.5;
+      max-height: 120rpx;
       overflow: hidden;
     }
   }
+
   .song-list {
     width: 100%;
-    padding-bottom: 160px;
+    padding-bottom: $jm-list-bottom;
+    background: $jm-color-surface;
+
     .song {
+      @include pressable-row;
       width: 100%;
-      padding: 0px 0px;
       display: flex;
-      -webkit-app-region: no-drag;
+      align-items: stretch;
       position: relative;
-      transition: all 250ms ease;
-      &:hover {
-        background: #FCFCFC;
-        .key {
-          color: $theme;
-        }
-      }
-      &:last-child {
-        .r {
-          border-bottom: none;
-        }
-      }
+
       .key {
-        width: 135px;
+        width: 80rpx;
+        flex-shrink: 0;
         display: flex;
-        justify-content: center;
         align-items: center;
-        color: #ECECEC;
-        font-size: 28px;
-        font-weight: bold;
+        justify-content: center;
+        color: $jm-color-text-tertiary;
+        font-size: $jm-font-caption;
+        font-weight: 500;
       }
+
       .r {
-        width: calc(100% - 60px);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        border-bottom: solid 1px #FAFAFA;
-        padding: 20px 30px 20px 0px;
-        cursor: pointer;
+        flex: 1;
+        min-width: 0;
+        padding: $jm-space-sm $jm-page-x $jm-space-sm 0;
+        border-bottom: 1rpx solid $jm-color-divider;
+
         .name {
-          font-size: 28px;
-          color: #333;
-          width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: normal;
+          font-size: $jm-font-body;
+          color: $jm-color-text;
+          @include text-ellipsis;
         }
+
         .singer {
-          font-size: 24px;
-          color: #999;
-          margin-top: 4px;
-          width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: normal;
+          font-size: $jm-font-caption;
+          color: $jm-color-text-secondary;
+          margin-top: 4rpx;
+          @include text-ellipsis;
         }
+      }
+
+      &:last-child .r {
+        border-bottom: none;
       }
     }
-    .song-active{
-      &:before {
-        content: '\e6a9';
-        font-family: iconfont;
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        right: 26px;
-        top: 0px;
-        height: 100%;
-        color: $theme;
-        font-size: 45px;
-      }
-      background: #F0F0F0;
-      &:hover {
-        background: #F0F0F0;
-      }
+
+    .song-active {
+      @include playing-row;
+
       .key {
-        color: $theme;
+        color: $jm-color-primary;
+        font-weight: 600;
+      }
+
+      .r {
+        padding-right: 72rpx;
+      }
+
+      &::before {
+        font-size: 40rpx;
+        right: $jm-page-x;
       }
     }
   }

@@ -10,6 +10,8 @@ import {
 import eventEmitter from '../utils/eventEmitter'
 import * as Events from '../constants/event-types'
 
+let playRequestSeq = 0
+
 // 处理歌词
 function formatLyric(lrc: string): Array<StoreState.Lyric> {
   if (!lrc) return []
@@ -90,12 +92,20 @@ export default modelExtend(model,  {
       try {
         const { id, restore } = payload
         const { currentSong, playState } = yield select(state => state.main)
-        if (currentSong.id === id && playState) return
-        const res = yield call(fetchMusicUrl, {id})
+        if (currentSong.id === id && playState && !restore) return
+
+        const requestSeq = ++playRequestSeq
+        const res = yield call(fetchMusicUrl, { id })
+        if (requestSeq !== playRequestSeq) return
+
         if (res.data.length > 0) {
-          yield put(Action('updateState', {currentSong: res.data[0]}))
-          setCacheData('currentSongId', res.data[0].id)
-          eventEmitter.trigger(Events.INITAUDIO, restore)
+          const nextSong = res.data[0]
+          yield put(Action('updateState', { currentSong: nextSong }))
+          setCacheData('currentSongId', nextSong.id)
+          eventEmitter.trigger(Events.INITAUDIO, {
+            restore: !!restore,
+            currentSong: nextSong
+          })
         }
       } catch(e) {
         console.error(e)

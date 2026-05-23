@@ -1,12 +1,12 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect } from 'react-redux'
 import shuffleArray from 'shuffle-array'
 import ControlBar from '../controlBar/controlBar'
 import PlayList from '../playList/playList'
-import eventEmitter from '../../utils/eventEmitter'
-import * as Events from '../../constants/event-types'
-import { getGlobalData, setCacheData, getCacheData } from '../../utils/index'
+import { bindPlayerEventsOnce, setPlayerHost } from '../../utils/playerBridge'
+import { getGlobalData, setGlobalData, setCacheData, getCacheData } from '../../utils/index'
 import {
   fetchSongInfo,
   fetchSongById,
@@ -46,6 +46,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
     addGlobalClass: true
   }
   private audio: Taro.BackgroundAudioManager = getGlobalData('backgroundAudioManager')
+  private pendingPlaySongId: number | undefined
   constructor() {
     super(...arguments)
     this.state = {
@@ -61,14 +62,24 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
     this.props.onUpdateState('main', { UIPage: true })
   }
   // 初始化播放器
-  initAudio(restore: boolean) {
-    let currentSong = this.props.main.currentSong
-    let url: string = currentSong.url
-    if (!url) {
+  initAudio(payload: boolean | StoreState.InitAudioPayload) {
+    const restore = typeof payload === 'boolean' ? payload : !!payload?.restore
+    const currentSong =
+      typeof payload === 'object' && payload?.currentSong
+        ? payload.currentSong
+        : this.props.main.currentSong
+    const songId = currentSong?.id
+    const url: string = currentSong?.url
+
+    if (!songId || !url) {
       this.showMsgToast('获取资源失败')
       return
     }
-    this.getSongInfo(currentSong.id, () => {
+
+    this.pendingPlaySongId = songId
+
+    this.getSongInfo(songId, () => {
+      if (this.pendingPlaySongId !== songId) return
       this.audio.src = url
       if (!restore) {
         this.audio.seek(0)
@@ -76,7 +87,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
         this.props.onUpdateState('main', { playState: !this.audio.paused })
       }
     })
-    this.getLyric(currentSong.id)
+    this.getLyric(songId)
   }
   // 歌曲播放
   playSongById(id: number | undefined, restore?: boolean) {
@@ -230,20 +241,21 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
   // 切换播放列表的播放顺序
   switchOrder() {
     const { main, onUpdateState } = this.props
-    let playOrder = main.playOrder;
-    if (playOrder === 0) {
-      playOrder = 1;
-    } else if (playOrder === 1) {
-      playOrder = 2;
-    } else if (playOrder === 2) {
-      playOrder = 0;
-    }
-    let tipItem = ['列表循环', '单曲循环', '随机播放']
-    onUpdateState('main', {playOrder})
-    // 缓存数据
+    const tipItem = ['列表循环', '单曲循环', '随机播放']
+    const cached = getCacheData('playOrder')
+    const current =
+      typeof cached === 'number' && cached >= 0 && cached <= 2
+        ? cached
+        : main.playOrder
+    const playOrder = (current + 1) % 3
+
+    onUpdateState('main', { playOrder })
     setCacheData('playOrder', playOrder)
-    this.showMsgToast(tipItem[playOrder])
-    let shuffleList = main.shuffleList;
+
+    Taro.hideToast()
+    this.showMsgToast(tipItem[playOrder], 1500)
+
+    const shuffleList = main.shuffleList
     if (shuffleList && shuffleList.length === 0) {
       this.createShuffleList()
     }
@@ -276,70 +288,40 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
     }
   }
   showMsgToast(title: string, dur?: number) {
+    Taro.hideToast()
     Taro.showToast({
-      title: title,
+      title,
       icon: 'none',
-      duration: dur || 2000
+      duration: dur || 1500
     })
   }
   initAudioManager() {
-    // 音乐停止
+    if (getGlobalData('audioManagerBound')) return
+    setGlobalData('audioManagerBound', true)
+
+    const getHost = (): CommonBar | undefined => getGlobalData('playerHostRef')
+
     this.audio.onEnded(() => {
-      this.playNext(1)
+      getHost()?.playNext(1)
     })
-    // 用户在系统音乐播放面板点击上一曲事件（iOS only）
     this.audio.onPrev(() => {
-      this.playNext(-1)
+      getHost()?.playNext(-1)
     })
-    // 用户在系统音乐播放面板点击下一曲事件（iOS only）
     this.audio.onNext(() => {
-      this.playNext(1)
+      getHost()?.playNext(1)
     })
-    // 背景音频播放事件
     this.audio.onPlay(() => {
-      !this.props.main.playState && this.switchPlay(true)
+      const host = getHost()
+      host && !host.props.main.playState && host.switchPlay(true)
     })
-    // 背景音频暂停事件
     this.audio.onPause(() => {
-      this.props.main.playState && this.switchPlay(false)
+      const host = getHost()
+      host && host.props.main.playState && host.switchPlay(false)
     })
   }
-  initEvents() {
-    // 监听初始化音频事件
-    eventEmitter.off(Events.INITAUDIO)
-    eventEmitter.on(Events.INITAUDIO, (restore) => {
-      this.initAudio(restore)
-    })
-    // 监听处罚添加播放列表事件
-    eventEmitter.off(Events.BATCHADD)
-    eventEmitter.on(Events.BATCHADD, (item) => {
-      this.batchAddToPlayList(item)
-    })
-    // 监听切换歌曲事件
-    eventEmitter.off(Events.NEXT)
-    eventEmitter.on(Events.NEXT, (type) => {
-      this.playNext(type)
-    })
-    // 监听创建随机播放列表事件
-    eventEmitter.off(Events.CREATESHUFFLE)
-    eventEmitter.on(Events.CREATESHUFFLE, () => {
-      this.createShuffleList()
-    })
-    // 监听切换播放事件
-    eventEmitter.off(Events.SWITCHPLAY)
-    eventEmitter.on(Events.SWITCHPLAY, (state) => {
-      this.switchPlay(state)
-    })
-    // 歌曲播放类型切换
-    eventEmitter.off(Events.SWITCHORDER)
-    eventEmitter.on(Events.SWITCHORDER, () => {
-      this.switchOrder()
-    })
-    // 监听点击展开播放列表事件
-    eventEmitter.off(Events.SWITCHPLAYLIST)
-    eventEmitter.on(Events.SWITCHPLAYLIST, () => {
-      this.targetingCur()
-    })
+  registerAsPlayerHost() {
+    setPlayerHost(this)
+    setGlobalData('playerHostRef', this)
   }
   componentWillMount() {
     let playOrder = getCacheData('playOrder') || 0,
@@ -354,10 +336,24 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
       this.createShuffleList();
     }
   }
+  pageLifetimes = {
+    show: () => {
+      this.registerAsPlayerHost()
+    }
+  }
+
+  componentWillUnmount() {
+    if (getGlobalData('playerHostRef') === this) {
+      setGlobalData('playerHostRef', null)
+      setPlayerHost(null)
+    }
+  }
+
   componentDidMount() {
     this.query = Taro.createSelectorQuery()
+    bindPlayerEventsOnce()
+    this.registerAsPlayerHost()
     this.initAudioManager()
-    this.initEvents()
     // let currentSongId = getCacheData('currentSongId')
     // if(currentSongId) {
     //   this.restore(currentSongId)
@@ -375,6 +371,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
     if (!songInfo.hasOwnProperty('ar')) {
       songInfo.ar = [{}];
     }
+    const hasActiveSong = !!(main.currentSong && main.currentSong.id)
     return (
       <View className='common-bar-wrapper'>
          {/*播放列表*/}
@@ -388,7 +385,8 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
                   onListToPlay={this.listToPlay.bind(this)}
                   ref='playList'/>
         {/*控制条*/}
-        <ControlBar isUIPage={main.UIPage}
+        <ControlBar visible={hasActiveSong}
+                    isUIPage={main.UIPage}
                     playState={main.playState}
                     songInfo={songInfo}
                     transform={transform}

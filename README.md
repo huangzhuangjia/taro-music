@@ -1,32 +1,84 @@
 # taro-music
 
-## Introduction
+基于 Taro 4 + React 18 + Dva + TypeScript 的网易云音乐小程序播放器。
 
- 本项目是基于 [Taro](https://github.com/NervJS/taro) + [Dva](https://dvajs.com/) + [TypeScript](https://www.tslang.cn/index.html) 开发的音乐播放器小程序，是个人用于学习taro框架开发的，功能也相对简单，当然也存在一些不足，前期是用taro的redux版本开发，后面发现业务代码和页面耦合度高，就加入了dva，一个基于 [redux](https://github.com/reduxjs/redux) 和 [redux-saga](https://github.com/redux-saga/redux-saga) 的数据流方案，这里只用了dva的一个核心 [dva-core](https://github.com/dvajs/dva/tree/master/packages/dva-core)，用于model层来降低耦合，用 [dva-model-extend](https://github.com/dvajs/dva-model-extend) 复用 model，大大提升了开发体验，效果不错。后台是网易云音乐[NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/) 提供的API，目前该项目还没有正式上线到小程序。
+## 技术栈
 
- [![music.gif](https://github.com/huangzhuangjia/taro-music/blob/master/src/assets/image/music.gif?raw=true)](https://github.com/huangzhuangjia/taro-music/blob/master/src/assets/image/music.gif?raw=true)
+- Taro 4.2
+- React 18
+- dva-core（状态管理）
+- NeteaseCloudMusicApi（后端 API）
 
-## Usage
+## 快速开始
 
-> 本项目已经使用了线上api接口，所以无需运行后台也可以获取数据，当然你也可以在本地运行 [NeteaseCloudMusicApi](https://binaryify.github.io/NeteaseCloudMusicApi/#/) 项目，开启获取歌曲服务，默认端口是3000
-
-```bash
-$ git clone git@github.com:Binaryify/NeteaseCloudMusicApi.git
-$ cd NeteaseCloudMusicApi && npm install
-$ npm start
-```
-
->在运行本项目前，确保系统已经全局安装了taro，[安装可详见这里](https://nervjs.github.io/taro/docs/GETTING-STARTED.html)，安装完运行项目后使用 [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html) 导入项目（本项目根目录进行导入），开发前注意事项可查看: https://nervjs.github.io/taro/docs/before-dev-remind.html
+### 1. 安装依赖
 
 ```bash
-# git clone
-$ git clone https://github.com/huangzhuangjia/taro-music.git
-# install
-$ npm i
-# or yarn install
-$ yarn install
-# development
-$ npm run dev:weapp
-# production
-$ npm run build:weapp
+npm install
 ```
+
+### 2. 启动 API 服务
+
+项目依赖 [NeteaseCloudMusicApi](https://www.npmjs.com/package/NeteaseCloudMusicApi) 提供数据，默认端口 `3000`：
+
+```bash
+npm run api
+```
+
+开发环境 API 地址在 `.env.development` 中配置：
+
+```
+TARO_APP_API=http://127.0.0.1:3000
+```
+
+生产环境请修改 `.env.production` 中的 `TARO_APP_API`，并在微信公众平台配置 request 合法域名。
+
+### 3. 编译小程序
+
+```bash
+npm run dev:weapp
+```
+
+使用 [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html) 导入项目根目录（`project.config.json` 中 `miniprogramRoot` 指向 `dist/`）。
+
+开发阶段可在开发者工具中关闭「不校验合法域名」。
+
+### 4. 生产构建
+
+```bash
+npm run build:weapp
+```
+
+## 项目结构
+
+```
+src/
+├── app.tsx / app.config.ts   # 应用入口与路由
+├── models/                   # dva 数据模型
+├── pages/                    # 页面
+├── components/               # 公共组件
+├── services/                 # API 请求
+└── utils/                    # 工具函数
+```
+
+## 功能
+
+- 推荐歌单 / 最新单曲 / 新碟上架
+- 歌单与专辑详情
+- 后台音频播放、歌词、播放列表
+- 列表循环 / 单曲循环 / 随机播放
+
+## 注意事项
+
+- 第三方 API 仅供学习，请遵守版权与平台规范
+- `project.config.json` 中的 `appid` 需替换为你自己的小程序 AppID
+
+## 性能优化（按需注入 / 用时注入）
+
+项目已开启微信小程序 [按需注入与用时注入](https://developers.weixin.qq.com/miniprogram/dev/framework/ability/lazyload.html)：
+
+- `app.config.ts`：`lazyCodeLoading: 'requiredComponents'` — 启动时只注入首页所需代码
+- 各页面 `*.config.ts`：`componentPlaceholder: { comp: 'view' }` — 组件首次渲染时再注入
+
+调试要求：微信开发者工具 ≥ 1.05.2111300，基础库 ≥ 2.20.1（`project.config.json` 中 `libVersion: 3.3.4`）。
+

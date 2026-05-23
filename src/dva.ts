@@ -2,7 +2,9 @@ import { create } from 'dva-core'
 import { createLogger } from 'redux-logger'
 import createLoading from 'dva-loading'
 
-let app, store, dispatch
+let app: ReturnType<typeof create>
+let store: any
+let dispatch: any
 
 function createApp(options?: any) {
   const { models } = options
@@ -14,8 +16,8 @@ function createApp(options?: any) {
   })
   app.use(createLoading({}))
 
-  if (!global.registered) models.forEach((model) => app.model(model))
-  global.registered = true
+  if (!globalThis.registered) models.forEach((model: any) => app.model(model))
+  globalThis.registered = true
   app.start()
 
   store = app._store

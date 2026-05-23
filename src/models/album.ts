@@ -22,28 +22,36 @@ export default modelExtend(model,  {
   },
   effects: {
     *fetchAlbumList({ payload }, { select, call, put }) {
-      const { albumList, offset, limit } =  yield select(state => state.album),
-            { callback, initOffset, isInit } = payload
+      const { albumList, offset, limit } = yield select(state => state.album)
+      const { callback, initOffset, isInit } = payload
+      const pageOffset = initOffset ?? offset
+
       try {
-        const res = yield call(fetchAlbumList, { offset: initOffset || offset, limit })
-        let filterList = res.albums.map((item) => {
-          return {
-            id: item.id,
-            name: item.name,
-            picUrl: item.picUrl,
-            singer: item.artist.name
-          }
-        })
-        let list = isInit ? [] : albumList
-        list = list.concat(filterList || [])
-        // 缓存数据
+        const res = yield call(fetchAlbumList, { offset: pageOffset, limit })
+        const source = res.albums || res.monthData || res.weekData || []
+        const pageData = source.slice(pageOffset * limit, (pageOffset + 1) * limit)
+
+        const filterList = pageData.map((item) => ({
+          id: item.id,
+          name: item.name,
+          picUrl: item.picUrl,
+          singer: item.artist?.name || item.artists?.[0]?.name || ''
+        }))
+
+        const list = isInit ? filterList : albumList.concat(filterList)
+        const total = res.total ?? source.length
+
         setCacheData('albumList', list)
-        yield put(Action('updateState', { albumList: list, total: res.total }))
+        yield put(Action('updateState', {
+          albumList: list,
+          total,
+          offset: pageOffset
+        }))
         callback && callback()
-      } catch(e) {
+      } catch (e) {
         console.error(e)
         callback && callback()
-        if (offset > 0) {
+        if (pageOffset > 0) {
           yield put(Action('loadFail'))
         }
       }

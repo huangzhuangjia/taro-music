@@ -50,8 +50,10 @@ function checkSuccess(data: any, resolve) {
  */
 function throwError(error, reject) {
   if (error.errMsg) {
-    reject('服务器正在维护中!')
-    throw new Error('服务器正在维护中!')
+    const message = '网络请求失败，请确认已执行 npm run api 并在开发者工具中关闭域名校验'
+    Taro.showToast({ title: message, icon: 'none', duration: 3000 })
+    reject(message)
+    throw new Error(message)
   }
   throw error
 }

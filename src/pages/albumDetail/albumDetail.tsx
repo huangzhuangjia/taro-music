@@ -1,6 +1,7 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, ScrollView, Image } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect } from 'react-redux'
 import eventEmitter from '../../utils/eventEmitter'
 import * as Events from '../../constants/event-types'
 import { getAlbumDetail } from '../../services/index'
@@ -12,30 +13,29 @@ import Loading from '../../components/loading'
 import '../listDetail/listDetail.scss'
 
 interface AlbumDetailProps {
-  main: StoreState.MainState,
-  onFetchSongById: (payload: { id: number, restore: boolean }) => any,
+  main: StoreState.MainState
+  onFetchSongById: (payload: { id: number, restore?: boolean }) => any
 }
+
 interface AlbumDetailStates {
-  album: any,
-  songs: any,
-  scrollState: boolean,
+  album: any
+  songs: any[]
+  scrollState: boolean
   loading: boolean
 }
 
 const mapStateToProps = ({ main }) => ({
   main
 })
-const mapDispatchToProps = ({
+
+const mapDispatchToProps = {
   onFetchSongById: fetchSongById
-})
+}
 
 @connect(mapStateToProps, mapDispatchToProps)
 class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
-  static options = {
-    addGlobalClass: true
-  }
-  constructor() {
-    super(...arguments)
+  constructor(props: AlbumDetailProps) {
+    super(props)
     this.state = {
       album: {},
       songs: [],
@@ -44,10 +44,9 @@ class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
     }
   }
 
-  componentWillPreload(params) {
-    return getAlbumDetail({
-      id: params.id
-    })
+  componentDidShow() {
+    const commonBar = this.refs.commonBar as any
+    commonBar && commonBar.registerAsPlayerHost && commonBar.registerAsPlayerHost()
   }
 
   componentDidMount() {
@@ -55,46 +54,46 @@ class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
   }
 
   getListDetail() {
-    this.$preloadData.then(res => {
+    const params = Taro.getCurrentInstance().router?.params
+    const id = params?.id
+    if (!id) {
+      this.setState({ loading: false })
+      return
+    }
+    getAlbumDetail({ id }).then(res => {
       if (res.code === 200) {
         this.setState({
           songs: res.songs,
           album: res.album,
           loading: false
         })
+      } else {
+        this.setState({ loading: false })
       }
+    }).catch(() => {
+      this.setState({ loading: false })
     })
   }
 
-  playSongById(id, restore) {
+  playSongById(id: number, restore?: boolean) {
     this.props.onFetchSongById({ id, restore })
   }
 
   scroll(e) {
-    let top = e.detail.scrollTop
+    const top = e.detail.scrollTop
     if (top > 200) {
       if (!this.state.scrollState) {
-        this.setState({
-          scrollState: true,
-        })
+        this.setState({ scrollState: true })
       }
-    } else {
-      if (this.state.scrollState) {
-        this.setState({
-          scrollState: false,
-        })
-      }
+    } else if (this.state.scrollState) {
+      this.setState({ scrollState: false })
     }
   }
 
-  goBack() {
-    Taro.navigateBack()
-  }
-
   saveToList() {
-    let songs = this.state.songs
-    let item: Array<StoreState.playItemState> = []
-    songs.map((data) => {
+    const songs = this.state.songs
+    const item: Array<StoreState.playItemState> = []
+    songs.forEach((data) => {
       item.push({
         id: data.id,
         name: data.name || '',
@@ -107,25 +106,24 @@ class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
   }
 
   render() {
-    let { songs, album, loading } = this.state,
-      currentSong = this.props.main.currentSong || {},
-      winHeight = Taro.getSystemInfoSync().windowHeight
+    const { songs, album, loading } = this.state
+    const currentSong = this.props.main.currentSong || {}
+    const winHeight = Taro.getWindowInfo().windowHeight
+
     if (loading) {
-      return <Loading/>
+      return <Loading />
     }
+
     return (
       <View className='listDetail-wrapper'>
-        {/* <View className={`windowsHead ${scrollState ? '' : 'windowsHead-transparent'}`}>
-          <View className='back iconfont icon-fanhui' onClick={this.goBack.bind(this)}></View>
-        </View> */}
         <ScrollView
           className='wrap'
           scrollY
-          scrollTop='0'
-          onScroll={this.scroll}
+          scrollTop={0}
+          onScroll={this.scroll.bind(this)}
           style={{ height: `${winHeight}px` }}>
-        <View className='listCoverBanner'>
-          <View className='play iconfont icon-tianjiaqiyedangan' onClick={this.saveToList.bind(this)}></View>
+          <View className='listCoverBanner'>
+            <View className='play iconfont icon-tianjiaqiyedangan' onClick={this.saveToList.bind(this)}></View>
             <View className='cover'>
               <Image src={album.picUrl || ''} mode='widthFix'></Image>
             </View>
@@ -151,7 +149,7 @@ class AlbumDetail extends Component<AlbumDetailProps, AlbumDetailStates> {
           </View>
         </ScrollView>
         <PlayDetail />
-        <CommonBar />
+        <CommonBar ref='commonBar' />
       </View>
     )
   }

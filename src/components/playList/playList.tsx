@@ -1,4 +1,5 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
 import { playOrderItem, PlayListProps } from "./playList.interface";
 
@@ -38,7 +39,7 @@ class PlayList extends Component<PlayListProps, {}> {
             </View>
             <View className='clear iconfont icon-shanchu' onClick={onDelList.bind(this, 'all')}></View>
           </View>
-          <ScrollView scrollY className='list-item' ref="songListItem">
+          <ScrollView scrollY className='list-item'>
             {
               playList.map((data, k) => {
                 return (

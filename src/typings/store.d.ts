@@ -41,4 +41,13 @@ declare namespace StoreState {
     cover?: string;
     from?: string;
   }
+  export interface CurrentSongState {
+    id?: number;
+    url?: string;
+    [key: string]: any;
+  }
+  export interface InitAudioPayload {
+    restore?: boolean;
+    currentSong: CurrentSongState;
+  }
 }

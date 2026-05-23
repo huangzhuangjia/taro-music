@@ -1,6 +1,7 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, ScrollView, Text, Image } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect } from 'react-redux'
 import { getCacheData } from '../../utils/index'
 import { fetchRecommendList, updateState } from '../../actions'
 import Loading from '../../components/loading'
@@ -98,7 +99,7 @@ class Recommend extends Component<RecommendProps, {}> {
                 <Text className='desc'>{recommendList[0].copywriter || ''}</Text>
                 <View onClick={this.navigateTo.bind(this,`/pages/listDetail/listDetail?id=${recommendList[0].id}`)}>
                   <View className='play-btn'>
-                    <View className='iconfont icon-bofang1'></View><Text>去看看</Text>
+                    <View className='iconfont icon-bofang1'></View><Text>进入歌单</Text>
                   </View>
                 </View>
               </View>
