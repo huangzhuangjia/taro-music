@@ -126,7 +126,7 @@ class Index extends Component<IndexProps, IndexStates> {
   }
 
   refresh() {
-    const { onFetchRecommendList, onFetchNewestList, onFetchAlbumList } = this.props
+    const { onFetchRecommendList, onFetchNewestList, onFetchAlbumList, onUpdateState } = this.props
     const activeTab = this.state.activeTab
 
     switch (activeTab) {
@@ -140,6 +140,7 @@ class Index extends Component<IndexProps, IndexStates> {
         break
       case 2:
         setCacheData('albumList', [])
+        onUpdateState('album', { offset: 0 })
         onFetchAlbumList({ callback: this.stopPullDownRefresh, initOffset: 0, isInit: true })
         break
       default:
