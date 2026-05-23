@@ -95,20 +95,26 @@ class Index extends Component<IndexProps, IndexStates> {
     }
   }
 
-  switchTab(index: number, init?: boolean) {
-    if (this.state.activeTab === index && !init) return
+  switchTab = (index: number) => {
+    if (this.state.activeTab === index) return
     this.setState({ activeTab: index })
 
     const { onFetchRecommendList, onFetchNewestList, onFetchAlbumList } = this.props
     switch (index) {
       case 0:
-        !this.isCache().recommend && onFetchRecommendList({})
+        if (!this.isCache().recommend) {
+          onFetchRecommendList({})
+        }
         break
       case 1:
-        !this.isCache().newSong && onFetchNewestList({})
+        if (!this.isCache().newSong) {
+          onFetchNewestList({})
+        }
         break
       case 2:
-        onFetchAlbumList({ isInit: false })
+        if (!this.isCache().album) {
+          onFetchAlbumList({ isInit: false })
+        }
         break
       default:
         break
@@ -142,6 +148,8 @@ class Index extends Component<IndexProps, IndexStates> {
   }
 
   render() {
+    const { activeTab } = this.state
+
     return (
       <View className='play-wrapper wrapper'>
         <View className='home-wrapper'>
@@ -149,22 +157,22 @@ class Index extends Component<IndexProps, IndexStates> {
             {
               this.state.tabs.map((data, k) => {
                 return (
-                  <View key={k} className={`tab ${this.state.activeTab === k ? 'cur' : ''}`} onClick={this.switchTab.bind(this, k)}>{data.title}</View>
+                  <View
+                    key={k}
+                    className={`tab ${activeTab === k ? 'cur' : ''}`}
+                    onClick={() => this.switchTab(k)}
+                  >
+                    {data.title}
+                  </View>
                 )
               })
             }
           </View>
           <View className='home-tab-wrapper'>
-            <View className='swiper-wrapper'>
-              <View className='swiper-slide' hidden={this.state.activeTab !== 0}>
-                <Recommend />
-              </View>
-              <View className='swiper-slide' hidden={this.state.activeTab !== 1}>
-                <NewSong />
-              </View>
-              <View className='swiper-slide' hidden={this.state.activeTab !== 2}>
-                <Album />
-              </View>
+            <View className='tab-panel'>
+              {activeTab === 0 && <Recommend />}
+              {activeTab === 1 && <NewSong />}
+              {activeTab === 2 && <Album />}
             </View>
           </View>
         </View>

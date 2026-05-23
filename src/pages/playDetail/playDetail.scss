@@ -1,7 +1,12 @@
 $theme: #666;
 .page-ui-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
+  z-index: 1000;
   .windowsHead {
     position: absolute;
   }
@@ -30,6 +35,8 @@ $theme: #666;
     overflow: hidden;
     transition: all 250ms ease-out;
     -webkit-user-select: none;
+    pointer-events: auto;
+    pointer-events: auto;
     .head {
       position: absolute;
       left: 0px;

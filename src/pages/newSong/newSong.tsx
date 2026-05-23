@@ -49,8 +49,8 @@ class NewSong extends Component<NewSongProps, {}> {
     this.props.onFetchSongById({ id, restore })
   }
   render() {
-    const { currentSong } = this.props.main,
-      { newestList } = this.props.newSong
+    const { currentSong } = this.props.main || { currentSong: {} },
+      { newestList = [] } = this.props.newSong || {}
     if (this.props.loading) {
       return <Loading/>
     }

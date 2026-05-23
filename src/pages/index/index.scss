@@ -12,6 +12,8 @@ $theme: #666;
     height: 100%;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     .home-tab {
       width: 100%;
       height: 56px;
@@ -39,18 +41,11 @@ $theme: #666;
     }
     .home-tab-wrapper {
       width: 100%;
-      height: calc(100vh - 30px - 32px);
-      .swiper-wrapper {
-        display: flex;
-        width: 400vw;
-        height: 100%;
-        .swiper-wrapper-inner {
-          width: 100%;
-          height: 100%;
-        }
-      }
-      .swiper-slide {
-        width: 100vw;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      .tab-panel {
+        width: 100%;
         height: 100%;
       }
     }
