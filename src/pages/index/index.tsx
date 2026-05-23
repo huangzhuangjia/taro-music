@@ -1,4 +1,5 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component, createRef } from 'react'
+import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import CommonBar from '../../components/commonBar/index'
 import PlayDetail from '../playDetail/playDetail'
@@ -10,36 +11,46 @@ import { getCacheData, setCacheData } from '../../utils/index'
 import './index.scss'
 
 interface TabItem {
-  id: number;
+  id: number
   title: string
 }
+
 const tabs: Array<TabItem> = [
-  {id: 0, title: '推荐歌单'},
-  {id: 1, title: '最新单曲'},
-  {id: 2, title: '新碟上架'},
+  { id: 0, title: '推荐歌单' },
+  { id: 1, title: '最新单曲' },
+  { id: 2, title: '新碟上架' },
 ]
 
 interface IndexStates {
-  activeTab: number;
+  activeTab: number
   tabs: Array<TabItem>
 }
+
 class Index extends Component<{}, IndexStates> {
+  private recommendRef = createRef<Recommend>()
+  private newSongRef = createRef<NewSong>()
+  private albumRef = createRef<Album>()
+
   state = {
     activeTab: 0,
     tabs: [...tabs]
   }
+
   componentDidMount() {
-    this.getCacheList()
+    this.loadInitialData()
   }
-  getCacheList() {
-    this.refs.Recommend.getRecommendList()
-    this.refs.NewSong.getNewest()
-    this.refs.Album.fetchAlbum(null, null, false, !!this.$router.params.tab)
+
+  loadInitialData() {
+    const tab = Taro.getCurrentInstance().router?.params?.tab
+    this.recommendRef.current?.getRecommendList()
+    this.newSongRef.current?.getNewest()
+    this.albumRef.current?.fetchAlbum(undefined, undefined, false, !!tab)
   }
-  // 下拉刷新
+
   onPullDownRefresh() {
     this.refresh()
   }
+
   isCache() {
     return {
       newSong: getCacheData('newSongList') && getCacheData('newSongList').length > 0,
@@ -47,53 +58,54 @@ class Index extends Component<{}, IndexStates> {
       album: getCacheData('albumList') && getCacheData('albumList').length > 0,
     }
   }
-  switchTab(index, init) {
+
+  switchTab(index: number, init?: boolean) {
     if (this.state.activeTab === index && !init) return
     this.setState({
       activeTab: index
     })
     switch (index) {
       case 0:
-        !this.isCache().recommend && this.refs.Recommend.fetchRecommendList()
+        !this.isCache().recommend && this.recommendRef.current?.fetchRecommendList()
         break
       case 1:
-        !this.isCache().newSong && this.refs.NewSong.fetchNewest()
+        !this.isCache().newSong && this.newSongRef.current?.fetchNewest()
         break
       case 2:
-        this.refs.Album.fetchAlbum(null, null, false, true)
+        this.albumRef.current?.fetchAlbum(undefined, undefined, false, true)
         break
       default:
-        break;
+        break
     }
   }
-  // 停止下拉刷新
+
   stopPullDownRefresh() {
     Taro.stopPullDownRefresh()
   }
-  // 刷新数据
+
   refresh() {
-    let activeTab = this.state.activeTab
+    const activeTab = this.state.activeTab
     switch (activeTab) {
       case 0:
-        setCacheData('newSongList', [])
-        this.refs.Recommend.fetchRecommendList(this.stopPullDownRefresh)
+        setCacheData('recommendList', [])
+        this.recommendRef.current?.fetchRecommendList(this.stopPullDownRefresh)
         break
       case 1:
-        setCacheData('recommendList', [])
-        this.refs.NewSong.fetchNewest(this.stopPullDownRefresh)
+        setCacheData('newSongList', [])
+        this.newSongRef.current?.fetchNewest(this.stopPullDownRefresh)
         break
       case 2:
         setCacheData('albumList', [])
-        this.refs.Album.fetchAlbum(this.stopPullDownRefresh, 0, true)
+        this.albumRef.current?.fetchAlbum(this.stopPullDownRefresh, 0, true)
         break
       default:
         break
     }
   }
+
   render() {
     return (
       <View className='play-wrapper wrapper'>
-        {/* 主体 */}
         <View className='home-wrapper'>
           <View className='home-tab'>
             {
@@ -106,13 +118,15 @@ class Index extends Component<{}, IndexStates> {
           </View>
           <View className='home-tab-wrapper'>
             <View className='swiper-wrapper'>
-              <View className='swiper-slide' hidden={this.state.activeTab == 0 ? false : true}>
-                <Recommend ref='Recommend' />
+              <View className='swiper-slide' hidden={this.state.activeTab !== 0}>
+                <Recommend ref={this.recommendRef} />
               </View>
-              <View className='swiper-slide' hidden={this.state.activeTab == 1 ? false : true}>
-                <NewSong ref='NewSong' />
+              <View className='swiper-slide' hidden={this.state.activeTab !== 1}>
+                <NewSong ref={this.newSongRef} />
               </View>
-              <View className='swiper-slide' hidden={this.state.activeTab == 2 ? false : true}><Album ref='Album' /></View>
+              <View className='swiper-slide' hidden={this.state.activeTab !== 2}>
+                <Album ref={this.albumRef} />
+              </View>
             </View>
           </View>
         </View>

@@ -1,9 +1,10 @@
 export const IS_DEV = process.env.NODE_ENV === 'development'
 
-// 开发时本地可自己开启NeteaseCloudMusicApi服务(https://binaryify.github.io/NeteaseCloudMusicApi/#/)
-export const BASE_URL = IS_DEV ? 'https://www.jungaweb.club' : 'https://www.jungaweb.club'
+// 本地开发：npm run api 启动 NeteaseCloudMusicApi（默认 3000 端口）
+// 生产环境：在 .env.production 配置 TARO_APP_API 并在微信公众平台配置 request 合法域名
+export const BASE_URL = process.env.TARO_APP_API || 'http://127.0.0.1:3000'
 
-export const HTTP_ERROR = {
+export const HTTP_ERROR: Record<number | string, string> = {
   '400': '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
   '401': '用户没有权限（令牌、用户名、密码错误）。',
   '403': '用户得到授权，但是访问是被禁止的。',

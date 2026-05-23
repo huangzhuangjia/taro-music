@@ -1,11 +1,9 @@
-import '@tarojs/async-await'
-import Taro, { Component, Config } from '@tarojs/taro'
-import { Provider } from '@tarojs/redux'
+import { Component, PropsWithChildren } from 'react'
+import { Provider } from 'react-redux'
+import Taro from '@tarojs/taro'
 
 import dva from './dva'
 import models from './models/index'
-import Index from './pages/index/index'
-
 import { setGlobalData } from './utils'
 
 import './app.scss'
@@ -13,50 +11,22 @@ import './assets/icon.css'
 
 const dvaApp = dva.createApp({
   initialState: {},
-  models: models
+  models
 })
 const store = dvaApp.getStore()
 
-const backgroundAudioManager = Taro.getBackgroundAudioManager()
-
-class App extends Component {
-
-  config: Config = {
-    pages: [
-      'pages/index/index',
-      'pages/listDetail/listDetail',
-      'pages/albumDetail/albumDetail'
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'JMusic',
-      navigationBarTextStyle: 'black',
-      enablePullDownRefresh: true
-    }
-  }
-
+class App extends Component<PropsWithChildren> {
   componentDidMount() {
-    setGlobalData('backgroundAudioManager', backgroundAudioManager)
+    setGlobalData('backgroundAudioManager', Taro.getBackgroundAudioManager())
   }
 
-  componentDidShow () {}
-
-  componentDidHide () {}
-
-  componentCatchError () {}
-
-  componentDidCatchError () {}
-
-  // 在 App 类中的 render() 函数没有实际作用
-  // 请勿修改此函数
-  render () {
+  render() {
     return (
       <Provider store={store}>
-        <Index />
+        {this.props.children}
       </Provider>
     )
   }
 }
 
-Taro.render(<App />, document.getElementById('app'))
+export default App

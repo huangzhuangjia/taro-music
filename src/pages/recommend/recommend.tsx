@@ -1,6 +1,7 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, ScrollView, Text, Image } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect } from 'react-redux'
 import { getCacheData } from '../../utils/index'
 import { fetchRecommendList, updateState } from '../../actions'
 import Loading from '../../components/loading'
@@ -18,10 +19,10 @@ const mapStateToProps = ({ recommend, loading }) => ({
   recommendList: recommend.recommendList,
   loading: loading.effects['recommend/fetchRecommendList']
 })
-const mapDispatchToProps = ({
+const mapDispatchToProps = {
   onFetchRecommendList: fetchRecommendList,
   onUpdateState: updateState
-})
+}
 
 @connect(mapStateToProps, mapDispatchToProps)
 class Recommend extends Component<RecommendProps, {}> {

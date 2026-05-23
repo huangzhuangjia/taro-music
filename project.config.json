@@ -1,16 +1,16 @@
 {
-	"miniprogramRoot": "dist/",
-	"projectname": "taro-music",
-	"description": "",
-	"appid": "wxd97fb80b623999d1",
-	"setting": {
-		"urlCheck": false,
-		"es6": false,
-		"postcss": false,
-		"minified": false,
-		"newFeature": true
-	},
-	"compileType": "miniprogram",
-	"libVersion": "2.4.2",
-	"condition": {}
+  "miniprogramRoot": "dist/",
+  "projectname": "taro-music",
+  "description": "Taro 4 音乐播放器",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.3.4",
+  "condition": {}
 }

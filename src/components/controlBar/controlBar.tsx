@@ -1,5 +1,5 @@
 // 播放控制条
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
 import { View, Text, Image, Canvas } from '@tarojs/components'
 import { ControlBarProps } from "./controlBar.interface";
 import coverImg from '../../assets/image/logo.png'

@@ -72,12 +72,11 @@ export default modelExtend(model,  {
   reducers: {
     getShuffleList(state, { payload }) {
       const { item } = payload
-      if (!item) return
-      let shuffleList = state.shuffleList,
-          len = shuffleList.length
-      ;(item || []).map((data) => {
-        let insertPosition = Math.floor(len * Math.random())
-        shuffleList = shuffleList.splice(insertPosition, 0, data)
+      if (!item) return state
+      const shuffleList = [...state.shuffleList]
+      ;(item || []).forEach((data) => {
+        const insertPosition = Math.floor(Math.random() * (shuffleList.length + 1))
+        shuffleList.splice(insertPosition, 0, data)
       })
       return {
         ...state,

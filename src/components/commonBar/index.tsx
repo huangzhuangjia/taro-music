@@ -1,6 +1,7 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect } from 'react-redux'
 import shuffleArray from 'shuffle-array'
 import ControlBar from '../controlBar/controlBar'
 import PlayList from '../playList/playList'
@@ -32,13 +33,13 @@ interface CommonBarStates {
 const mapStateToProps = ({ main }) => ({
   main
 })
-const mapDispatchToProps = ({
+const mapDispatchToProps = {
   onFetchSongInfo: fetchSongInfo,
   onFetchSongById: fetchSongById,
   onFetchLyric: fetchLyric,
   onSetShuffleList: setShuffleList,
   onUpdateState: updateState
-})
+}
 
 @connect(mapStateToProps, mapDispatchToProps)
 class CommonBar extends Component<CommonBarProps, CommonBarStates> {
@@ -46,6 +47,8 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
     addGlobalClass: true
   }
   private audio: Taro.BackgroundAudioManager = getGlobalData('backgroundAudioManager')
+  private query: Taro.SelectorQuery | null = null
+  private query: Taro.SelectorQuery | null = null
   constructor() {
     super(...arguments)
     this.state = {
@@ -206,20 +209,9 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
   }
   // 点击显示当前播放列表
   targetingCur() {
-    let curPlayRow = this.query.select('.wrapper >>> .common-bar-wrapper >>> .row-playing')
     this.setState({
       playListState: true,
     })
-    if (curPlayRow.length > 0) {
-      curPlayRow = curPlayRow[0];
-      curPlayRow.boundingClientRect(rect => {
-        let top = rect.top - 40 * 5
-        if (top < 0) {
-          top = 0
-        }
-        this.refs.playList.refs.songListItem.scrollTop = top
-      }).exec()
-    }
   }
   // 关闭播放列表
   onClose() {
@@ -341,27 +333,21 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
       this.targetingCur()
     })
   }
-  componentWillMount() {
-    let playOrder = getCacheData('playOrder') || 0,
-      playList = getCacheData('playList') || [],
-      { onUpdateState } = this.props
+  componentDidMount() {
+    const playOrder = getCacheData('playOrder') || 0
+    const playList = getCacheData('playList') || []
+    const { onUpdateState } = this.props
     onUpdateState('main', {
       playOrder,
       playList
     })
     this.savePlayList(playList)
     if (playOrder === 2) {
-      this.createShuffleList();
+      this.createShuffleList()
     }
-  }
-  componentDidMount() {
-    this.query = Taro.createSelectorQuery()
+    this.query = Taro.createSelectorQuery().in(this)
     this.initAudioManager()
     this.initEvents()
-    // let currentSongId = getCacheData('currentSongId')
-    // if(currentSongId) {
-    //   this.restore(currentSongId)
-    // }
   }
   render() {
     let { main } = this.props
@@ -385,8 +371,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
                   onClose={this.onClose.bind(this)}
                   onSwitchOrder={this.switchOrder.bind(this)}
                   onDelList={this.delList.bind(this)}
-                  onListToPlay={this.listToPlay.bind(this)}
-                  ref='playList'/>
+                  onListToPlay={this.listToPlay.bind(this)} />
         {/*控制条*/}
         <ControlBar isUIPage={main.UIPage}
                     playState={main.playState}
@@ -394,8 +379,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
                     transform={transform}
                     onToUIPage={this.toUIPage.bind(this)}
                     onSwitchPlay={this.switchPlay.bind(this)}
-                    onTargetingCur={this.targetingCur.bind(this)}
-                    ref='ControlBar'/>
+                    onTargetingCur={this.targetingCur.bind(this)} />
      </View>
     )
   }

@@ -1,6 +1,7 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
+import { connect } from 'react-redux'
 import { getCacheData } from '../../utils/index'
 import {
   fetchNewestList,
@@ -24,11 +25,11 @@ const mapStateToProps = ({ main, newSong, loading }) => ({
   newSong,
   loading: loading.effects['newSong/fetchNewestList']
 })
-const mapDispatchToProps = ({
+const mapDispatchToProps = {
   onFetchNewestList: fetchNewestList,
   onFetchSongById: fetchSongById,
   onUpdateState: updateState
-})
+}
 
 @connect(mapStateToProps, mapDispatchToProps)
 class NewSong extends Component<NewSongProps, {}> {

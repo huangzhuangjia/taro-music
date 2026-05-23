@@ -5,12 +5,7 @@ import {
   HTTP_ERROR
 } from '../config/index'
 
-/**
- * 检查http状态值
- * @param response
- * @returns {*}
- */
-function checkHttpStatus(response: API.Response) {
+function checkHttpStatus(response: Taro.request.SuccessCallbackResult<any>) {
   if (response.statusCode >= 200 && response.statusCode < 300) {
     return response.data
   }
@@ -21,12 +16,7 @@ function checkHttpStatus(response: API.Response) {
   throw error
 }
 
-/**
- * 检查返回值是否正常
- * @param data
- * @returns {*}
- */
-function checkSuccess(data: any, resolve) {
+function checkSuccess(data: any, resolve: (value: any) => void) {
   if (data instanceof ArrayBuffer && typeof data === 'string') {
     return data
   }
@@ -43,12 +33,7 @@ function checkSuccess(data: any, resolve) {
   throw error
 }
 
-/**
- * 请求错误处理
- * @param error
- * @param reject
- */
-function throwError(error, reject) {
+function throwError(error: any, reject: (reason?: any) => void) {
   if (error.errMsg) {
     reject('服务器正在维护中!')
     throw new Error('服务器正在维护中!')
@@ -63,7 +48,7 @@ export default {
     return new Promise((resolve, reject) => {
       Taro.request({
         ...options,
-        method: method || 'GET',
+        method: (method || 'GET') as keyof Taro.request.Method,
         url: `${BASE_URL}${url}`,
         header: {
           'content-type': 'application/x-www-form-urlencoded',
