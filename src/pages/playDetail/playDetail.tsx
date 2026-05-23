@@ -143,11 +143,9 @@ class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
           <Image className='play-ui-page-bg' src={coverUrl} mode='aspectFill' />
 
           <View className='play-nav'>
-            <View className='play-nav__handle' onClick={this.goBack.bind(this)} />
-            <View
-              className='play-nav__dismiss iconfont icon-zuixiaohua'
-              onClick={this.goBack.bind(this)}
-            />
+            <View className='play-nav__handle-wrap' onClick={this.goBack.bind(this)}>
+              <View className='play-nav__handle' />
+            </View>
           </View>
 
           <View className='cover'>

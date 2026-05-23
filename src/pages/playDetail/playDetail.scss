@@ -43,39 +43,29 @@
       left: 0;
       top: 0;
       width: 100%;
-      height: calc(72rpx + env(safe-area-inset-top));
+      height: calc(48rpx + env(safe-area-inset-top));
       z-index: 10;
       box-sizing: border-box;
       pointer-events: none;
 
-      &__handle {
+      &__handle-wrap {
         position: absolute;
         left: 50%;
-        top: calc(10rpx + env(safe-area-inset-top));
+        top: calc(4rpx + env(safe-area-inset-top));
         transform: translateX(-50%);
+        padding: 20rpx 48rpx;
+        pointer-events: auto;
+
+        &:active .play-nav__handle {
+          opacity: 0.55;
+        }
+      }
+
+      &__handle {
         width: 72rpx;
         height: 8rpx;
         border-radius: 4rpx;
         background: rgba(60, 60, 67, 0.22);
-        pointer-events: auto;
-      }
-
-      &__dismiss {
-        position: absolute;
-        left: $jm-page-x;
-        bottom: 4rpx;
-        width: 64rpx;
-        height: 64rpx;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 40rpx;
-        color: $jm-color-text-secondary;
-        pointer-events: auto;
-
-        &:active {
-          opacity: 0.55;
-        }
       }
     }
 
