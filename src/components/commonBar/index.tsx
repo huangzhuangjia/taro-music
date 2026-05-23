@@ -387,6 +387,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
     if (!songInfo.hasOwnProperty('ar')) {
       songInfo.ar = [{}];
     }
+    const hasActiveSong = !!(main.currentSong && main.currentSong.id)
     return (
       <View className='common-bar-wrapper'>
          {/*播放列表*/}
@@ -400,7 +401,8 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
                   onListToPlay={this.listToPlay.bind(this)}
                   ref='playList'/>
         {/*控制条*/}
-        <ControlBar isUIPage={main.UIPage}
+        <ControlBar visible={hasActiveSong}
+                    isUIPage={main.UIPage}
                     playState={main.playState}
                     songInfo={songInfo}
                     transform={transform}
