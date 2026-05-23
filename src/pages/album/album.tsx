@@ -77,7 +77,7 @@ class Album extends Component<AlbumProps, {}> {
                   onClick={this.navigateTo.bind(this, `/pages/albumDetail/albumDetail?id=${data.id}`)}
                 >
                   <View className='cover'>
-                    <Image src={data.picUrl} lazyLoad />
+                    <Image src={data.picUrl} mode='aspectFill' lazyLoad />
                   </View>
                   <View className='info'>
                     <View className='name'>{data.name}</View>
