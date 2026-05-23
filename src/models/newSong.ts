@@ -13,7 +13,11 @@ export default modelExtend(model, {
     *fetchNewestList({ payload }, { put, call }) {
       try {
         const res = yield call(fetchNewSong)
-        let newestList = res.result || []
+        // 接口项外层 id 与 song.id 可能不一致，播放/高亮必须用歌曲 id
+        let newestList = (res.result || []).map((item: any) => ({
+          ...item,
+          id: item.song?.id ?? item.id
+        }))
         // 缓存数据
         setCacheData('newSongList', newestList)
         yield put(Action('updateState', { newestList }))

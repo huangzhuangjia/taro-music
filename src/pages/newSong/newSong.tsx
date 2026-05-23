@@ -33,6 +33,20 @@ const mapDispatchToProps = {
   onUpdateState: updateState
 }
 
+/** /personalized/newsong 条目：播放与展示统一用 song.id */
+function getTrackId(item: any): number {
+  return item?.song?.id ?? item?.id
+}
+
+function getCoverUrl(song: any): string {
+  return song?.al?.picUrl || song?.album?.picUrl || ''
+}
+
+function getArtistName(song: any): string {
+  const ar = song?.ar || song?.artists
+  return ar?.[0]?.name || ''
+}
+
 @connect(mapStateToProps, mapDispatchToProps)
 class NewSong extends Component<NewSongProps, {}> {
   static options = {
@@ -42,7 +56,11 @@ class NewSong extends Component<NewSongProps, {}> {
   getNewest() {
     const newestList = getCacheData('newSongList')
     if (newestList && newestList.length > 0) {
-      this.props.onUpdateState('newSong', { newestList })
+      const normalized = newestList.map((item: any) => ({
+        ...item,
+        id: getTrackId(item)
+      }))
+      this.props.onUpdateState('newSong', { newestList: normalized })
     }
   }
 
@@ -70,21 +88,25 @@ class NewSong extends Component<NewSongProps, {}> {
           enableBackToTop
           scrollWithAnimation
         >
-          {newestList.map((data, k) => (
-            <View
-              key={k}
-              className={`song-itembox ${currentSong.id === data.id ? 'song-itembox-active' : ''}`}
-              onClick={() => this.playSongById(data.id)}
-            >
-              <View className='cover'>
-                <Image src={data.song.album.picUrl} lazyLoad />
+          {newestList.map((data, k) => {
+            const songId = getTrackId(data)
+            const song = data.song || {}
+            return (
+              <View
+                key={songId || k}
+                className={`song-itembox ${currentSong.id === songId ? 'song-itembox-active' : ''}`}
+                onClick={() => this.playSongById(songId)}
+              >
+                <View className='cover'>
+                  <Image src={getCoverUrl(song)} lazyLoad />
+                </View>
+                <View className='info'>
+                  <View className='name'>{song.name}</View>
+                  <Text className='singer'>{getArtistName(song)}</Text>
+                </View>
               </View>
-              <View className='info'>
-                <View className='name'>{data.song.name}</View>
-                <Text className='singer'>{data.song.artists[0].name}</Text>
-              </View>
-            </View>
-          ))}
+            )
+          })}
         </ScrollView>
       </View>
     )
