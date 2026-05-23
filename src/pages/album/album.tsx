@@ -28,13 +28,6 @@ class Album extends Component<AlbumProps, {}> {
   static options = {
     addGlobalClass: true
   }
-  /**
-   * 获取新碟数据
-   * @param callback 回调
-   * @param initOffset 初始页码
-   * @param isInit 是否初始化
-   * @param isUnLoad 是否不加载请求数据
-   */
   fetchAlbum(callback?: any, initOffset?: number, isInit?: boolean, isUnLoad?: boolean) {
     if (isUnLoad) return
     this.props.onFetchAlbumList({ callback, initOffset, isInit })
@@ -67,30 +60,28 @@ class Album extends Component<AlbumProps, {}> {
           lowerThreshold='150'
           enableBackToTop
           onScrollToLower={this.loadingMore}
-          className='item-list'>
-        {
-            albumList.map((data, k) => {
-              return (
-                <View
-                  className='album-itembox'
-                  key={k}
-                  onClick={this.navigateTo.bind(this, `/pages/albumDetail/albumDetail?id=${data.id}`)}
-                >
-                  <View className='cover'>
-                    <Image src={data.picUrl} mode='aspectFill' lazyLoad />
-                  </View>
-                  <View className='info'>
-                    <View className='name'>{data.name}</View>
-                    <Text className='singer'>{data.singer}</Text>
-                  </View>
+          className='item-list'
+        >
+          <View className='album-grid'>
+            {albumList.map((data, k) => (
+              <View
+                className='album-itembox'
+                key={data.id || k}
+                onClick={this.navigateTo.bind(this, `/pages/albumDetail/albumDetail?id=${data.id}`)}
+              >
+                <View className='cover'>
+                  <Image src={data.picUrl} mode='aspectFill' lazyLoad />
                 </View>
-              )
-            })
-          }
-          {
-            (albumList.length == total && albumList.length > 0) ?
-              <View className='loadingend'>没有了~~</View> : null
-          }
+                <View className='info'>
+                  <View className='name'>{data.name}</View>
+                  <Text className='singer'>{data.singer}</Text>
+                </View>
+              </View>
+            ))}
+            {albumList.length === total && albumList.length > 0 ? (
+              <View className='loadingend'>没有了~~</View>
+            ) : null}
+          </View>
         </ScrollView>
       </View>
     )

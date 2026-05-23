@@ -16,81 +16,82 @@
     height: 0;
     min-height: 0;
     box-sizing: border-box;
+  }
+
+  // ScrollView 内单层 flex 容器，避免 float 高度不齐导致单卡靠右
+  .album-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
     padding: $jm-space-xs $jm-page-x $jm-list-bottom;
+    box-sizing: border-box;
+  }
 
-    &::after {
-      content: '';
-      display: block;
-      clear: both;
+  .album-itembox {
+    width: 50%;
+    padding: $jm-space-sm;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    transition: transform $jm-duration-normal $jm-ease-out;
+
+    &:active {
+      transform: scale(0.98);
     }
 
-    .album-itembox {
-      width: 50%;
-      padding: $jm-space-sm;
-      float: left;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      transition: transform $jm-duration-normal $jm-ease-out;
-
-      &:active {
-        transform: scale(0.98);
-      }
-
-      .cover {
-        width: 100%;
-        height: 0;
-        padding-bottom: 100%;
-        position: relative;
-        flex-shrink: 0;
-        border-radius: $jm-radius-artwork;
-        overflow: hidden;
-        box-shadow: $jm-shadow-md;
-
-        image {
-          position: absolute;
-          left: 0;
-          top: 0;
-          display: block;
-          width: 100%;
-          height: 100%;
-          border-radius: $jm-radius-artwork;
-          background: $jm-color-surface-inset;
-        }
-      }
-
-      .info {
-        width: 100%;
-        padding-top: $jm-space-sm;
-        box-sizing: border-box;
-
-        .name {
-          width: 100%;
-          font-size: $jm-font-body;
-          font-weight: 600;
-          color: $jm-color-text;
-          line-height: 1.35;
-          @include text-ellipsis;
-        }
-
-        .singer {
-          width: 100%;
-          font-size: $jm-font-caption;
-          color: $jm-color-text-secondary;
-          margin-top: 4rpx;
-          @include text-ellipsis;
-        }
-      }
-    }
-
-    .loadingend {
-      clear: both;
+    .cover {
       width: 100%;
-      padding: $jm-space-lg 0;
-      text-align: center;
-      color: $jm-color-text-tertiary;
-      font-size: $jm-font-caption;
-      box-sizing: border-box;
+      height: 0;
+      padding-bottom: 100%;
+      position: relative;
+      flex-shrink: 0;
+      border-radius: $jm-radius-artwork;
+      overflow: hidden;
+      box-shadow: $jm-shadow-md;
+
+      image {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: $jm-radius-artwork;
+        background: $jm-color-surface-inset;
+      }
     }
+
+    .info {
+      width: 100%;
+      padding-top: $jm-space-sm;
+      box-sizing: border-box;
+
+      .name {
+        width: 100%;
+        font-size: $jm-font-body;
+        font-weight: 600;
+        color: $jm-color-text;
+        line-height: 1.35;
+        @include text-ellipsis;
+      }
+
+      .singer {
+        width: 100%;
+        font-size: $jm-font-caption;
+        color: $jm-color-text-secondary;
+        margin-top: 4rpx;
+        @include text-ellipsis;
+      }
+    }
+  }
+
+  .loadingend {
+    width: 100%;
+    flex-basis: 100%;
+    padding: $jm-space-lg 0;
+    text-align: center;
+    color: $jm-color-text-tertiary;
+    font-size: $jm-font-caption;
+    box-sizing: border-box;
   }
 }
