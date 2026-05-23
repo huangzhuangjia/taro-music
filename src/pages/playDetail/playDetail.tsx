@@ -30,7 +30,6 @@ const mapDispatchToProps = ({
   onUpdateState: updateState
 })
 
-@connect(mapStateToProps, mapDispatchToProps)
 class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
   static options = {
     addGlobalClass: true
@@ -211,4 +210,4 @@ class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
   }
 }
 
-export default PlayDetail
+export default connect(mapStateToProps, mapDispatchToProps)(PlayDetail)
