@@ -5,7 +5,7 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  background: $jm-color-surface;
+  background: $jm-color-bg;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -16,10 +16,8 @@
     height: 0;
     min-height: 0;
     box-sizing: border-box;
-    padding-top: 20rpx;
-    padding-bottom: $jm-list-bottom;
+    padding: $jm-space-xs $jm-page-x $jm-list-bottom;
 
-    // 小程序 ScrollView 内双列：沿用 float，避免 flex 作用在外层包裹 View 上错位
     &::after {
       content: '';
       display: block;
@@ -28,63 +26,44 @@
 
     .album-itembox {
       width: 50%;
-      height: 48vw;
-      padding: 32rpx 72rpx;
+      padding: $jm-space-sm;
       float: left;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      transition: opacity $jm-duration-normal $jm-ease-out;
+      transition: transform $jm-duration-normal $jm-ease-out;
 
       &:active {
-        opacity: 0.85;
+        transform: scale(0.98);
       }
 
       .cover {
-        width: 30vw;
-        height: 30vw;
+        width: 100%;
+        aspect-ratio: 1;
         position: relative;
         flex-shrink: 0;
-
-        &::before {
-          content: '';
-          display: block;
-          width: 30vw;
-          height: 30vw;
-          background: $jm-color-player-from;
-          border-radius: 50%;
-          position: absolute;
-          right: -70rpx;
-          top: 50%;
-          margin-top: -15vw;
-          opacity: 0.12;
-          z-index: 0;
-          transition: right $jm-duration-normal $jm-ease-out;
-        }
 
         image {
           display: block;
           width: 100%;
           height: 100%;
-          position: absolute;
-          left: 0;
-          top: 0;
-          z-index: 1;
-          box-shadow: $jm-shadow-sm;
-          background: $jm-color-surface;
+          border-radius: $jm-radius-artwork;
+          box-shadow: $jm-shadow-md;
+          background: $jm-color-surface-inset;
         }
       }
 
       .info {
         width: 100%;
-        padding-top: 40rpx;
+        padding-top: $jm-space-sm;
         box-sizing: border-box;
 
         .name {
           width: 100%;
-          font-size: $jm-font-title;
+          font-size: $jm-font-body;
+          font-weight: 600;
           color: $jm-color-text;
-          line-height: 1.6;
+          line-height: 1.35;
           @include text-ellipsis;
         }
 
@@ -92,7 +71,7 @@
           width: 100%;
           font-size: $jm-font-caption;
           color: $jm-color-text-secondary;
-          line-height: 1.6;
+          margin-top: 4rpx;
           @include text-ellipsis;
         }
       }

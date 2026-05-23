@@ -10,6 +10,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  font-family: $jm-font-family;
 
   .home-wrapper {
     flex: 1;
@@ -20,37 +21,34 @@
     overflow: hidden;
 
     .home-tab {
-      width: 100%;
-      height: 88rpx;
       flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      background: $jm-color-surface-raised;
-      border-bottom: 1rpx solid $jm-color-divider;
+      padding: $jm-space-sm $jm-page-x $jm-space-xs;
+      background: $jm-color-bg;
       z-index: 2;
 
-      .tab {
-        flex: 1;
-        text-align: center;
-        padding: $jm-space-xs 0;
-        font-size: $jm-font-tab;
-        color: $jm-color-text-secondary;
-        font-weight: 400;
-        transition: color $jm-duration-normal $jm-ease-out;
-        position: relative;
+      .home-tab-segment {
+        display: flex;
+        align-items: center;
+        padding: 6rpx;
+        background: $jm-segment-bg;
+        border-radius: $jm-radius-md;
 
-        &.cur {
-          color: $jm-color-text;
-          font-weight: 600;
+        .tab {
+          flex: 1;
+          text-align: center;
+          padding: 14rpx 0;
+          font-size: $jm-font-tab;
+          font-weight: 500;
+          color: $jm-color-text-secondary;
+          border-radius: calc(#{$jm-radius-md} - 4rpx);
+          transition: all $jm-duration-normal $jm-ease-out;
 
-          &::after {
-            content: '';
-            display: block;
-            width: 48rpx;
-            height: 6rpx;
-            margin: 8rpx auto 0;
-            border-radius: 3rpx;
-            background: $jm-color-primary;
+          &.cur {
+            color: $jm-color-text;
+            font-weight: 600;
+            background: $jm-segment-active-shadow;
+            background-color: $jm-color-surface;
+            box-shadow: $jm-segment-active-shadow;
           }
         }
       }
@@ -65,7 +63,7 @@
         width: 100%;
         height: 100%;
         min-height: 0;
-        background: $jm-color-surface;
+        background: $jm-color-bg;
       }
     }
   }
@@ -77,15 +75,5 @@
     justify-content: center;
     color: $jm-color-text-tertiary;
     font-size: $jm-font-caption;
-  }
-
-  .loadingempty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 60vh;
-    color: $jm-color-text-tertiary;
-    font-size: $jm-font-body;
   }
 }

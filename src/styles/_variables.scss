@@ -1,73 +1,58 @@
-// JMusic · 沉韵 v2（UI UX Pro Max：Music Streaming 浅色分层，非纯白底）
-// 参考：暖石 Background + 纸面 Card + 靛紫播放区 + 赤陶 CTA
-
-// ── Brand ──
-$jm-color-primary: #C85347;
-$jm-color-primary-dark: #A84339;
-$jm-color-primary-soft: rgba(200, 83, 71, 0.14);
-$jm-color-accent-play: #3A9B6E;
-
-// ── Surfaces（三层，避免 #FFFFFF 铺满）──
-$jm-color-bg: #E6E4DF;
-$jm-color-surface: #EFEDEA;
-$jm-color-surface-raised: #F7F5F2;
-$jm-color-surface-inset: #E0DCD5;
-
-// 兼容旧 token 名
-$jm-color-surface-card: $jm-color-surface-raised;
-
-$jm-color-divider: #D5D0C9;
-$jm-color-border: #C8C2BA;
-
-// ── Text ──
-$jm-color-text: #2B2926;
-$jm-color-text-secondary: #6B6560;
-$jm-color-text-tertiary: #9C9690;
-$jm-color-text-inverse: #F7F5F2;
-
-$jm-color-mask: rgba(43, 41, 38, 0.5);
-$jm-color-tag: rgba(43, 41, 38, 0.62);
-
-// ── Player（靛灰炭，与暖色页面形成对比）──
-$jm-color-player-from: #45435A;
-$jm-color-player-to: #2A2838;
-$jm-color-progress-track: rgba(255, 255, 255, 0.22);
-$jm-color-progress-fill: #F7F5F2;
-
+// JMusic · Apple Music / iOS
+$jm-color-primary: #fa2d48;
+$jm-color-primary-dark: #d92540;
+$jm-color-primary-soft: rgba(250, 45, 72, 0.12);
+$jm-color-accent-play: #fa2d48;
+$jm-color-link: #007aff;
+$jm-color-bg: #f2f2f7;
+$jm-color-surface: #ffffff;
+$jm-color-surface-raised: #ffffff;
+$jm-color-surface-inset: rgba(120, 120, 128, 0.12);
+$jm-color-surface-card: #ffffff;
+$jm-color-divider: rgba(60, 60, 67, 0.12);
+$jm-color-border: rgba(60, 60, 67, 0.18);
+$jm-color-text: #000000;
+$jm-color-text-secondary: rgba(60, 60, 67, 0.6);
+$jm-color-text-tertiary: rgba(60, 60, 67, 0.3);
+$jm-color-text-inverse: #ffffff;
+$jm-color-mask: rgba(0, 0, 0, 0.4);
+$jm-color-tag: rgba(0, 0, 0, 0.52);
+$jm-color-player-from: #ffffff;
+$jm-color-player-to: #f2f2f7;
+$jm-color-progress-track: rgba(60, 60, 67, 0.18);
+$jm-color-progress-fill: $jm-color-primary;
 $theme: $jm-color-primary;
-
-$jm-font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue',
-  Helvetica, sans-serif;
-
+$jm-font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+$jm-font-large-title: 48rpx;
 $jm-font-display: 40rpx;
-$jm-font-title: 32rpx;
-$jm-font-body: 28rpx;
-$jm-font-caption: 24rpx;
+$jm-font-title: 34rpx;
+$jm-font-body: 30rpx;
+$jm-font-caption: 26rpx;
 $jm-font-micro: 22rpx;
-$jm-font-tab: 28rpx;
-
+$jm-font-tab: 26rpx;
 $jm-space-2xs: 8rpx;
 $jm-space-xs: 16rpx;
 $jm-space-sm: 24rpx;
 $jm-space-md: 32rpx;
 $jm-space-lg: 48rpx;
-
 $jm-page-x: 32rpx;
-$jm-list-bottom: 160rpx;
-
-$jm-radius-sm: 8rpx;
-$jm-radius-md: 12rpx;
-$jm-radius-lg: 16rpx;
-
-$jm-shadow-sm: 0 4rpx 16rpx rgba(43, 41, 38, 0.08);
-$jm-shadow-md: 0 8rpx 28rpx rgba(43, 41, 38, 0.12);
-$jm-shadow-cover: 0 12rpx 40rpx rgba(43, 41, 38, 0.16);
-$jm-shadow-bar: 0 -4rpx 24rpx rgba(43, 41, 38, 0.1);
-
+$jm-list-bottom: 180rpx;
+$jm-radius-sm: 12rpx;
+$jm-radius-md: 20rpx;
+$jm-radius-lg: 24rpx;
+$jm-radius-xl: 32rpx;
+$jm-radius-artwork: 16rpx;
+$jm-radius-pill: 999rpx;
+$jm-shadow-sm: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
+$jm-shadow-md: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+$jm-shadow-cover: 0 20rpx 60rpx rgba(0, 0, 0, 0.16);
+$jm-shadow-bar: 0 -1rpx 0 rgba(60, 60, 67, 0.16);
+$jm-segment-bg: rgba(118, 118, 128, 0.12);
+$jm-segment-active-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
 $jm-z-bar: 100;
 $jm-z-player: 1000;
-
 $jm-duration-normal: 250ms;
-$jm-ease-out: cubic-bezier(0.33, 1, 0.68, 1);
-
+$jm-duration-slow: 380ms;
+$jm-ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
+$jm-ease-spring: cubic-bezier(0.34, 1.2, 0.64, 1);
 $jm-safe-bottom: env(safe-area-inset-bottom);

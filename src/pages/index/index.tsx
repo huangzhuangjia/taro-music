@@ -155,19 +155,21 @@ class Index extends Component<IndexProps, IndexStates> {
       <View className='play-wrapper wrapper'>
         <View className='home-wrapper'>
           <View className='home-tab'>
-            {
-              this.state.tabs.map((data, k) => {
-                return (
-                  <View
-                    key={k}
-                    className={`tab ${activeTab === k ? 'cur' : ''}`}
-                    onClick={() => this.switchTab(k)}
-                  >
-                    {data.title}
-                  </View>
-                )
-              })
-            }
+            <View className='home-tab-segment'>
+              {
+                this.state.tabs.map((data, k) => {
+                  return (
+                    <View
+                      key={k}
+                      className={`tab ${activeTab === k ? 'cur' : ''}`}
+                      onClick={() => this.switchTab(k)}
+                    >
+                      {data.title}
+                    </View>
+                  )
+                })
+              }
+            </View>
           </View>
           <View className='home-tab-wrapper'>
             <View className='tab-panel'>

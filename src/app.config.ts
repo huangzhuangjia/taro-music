@@ -6,14 +6,12 @@ export default defineAppConfig({
   ],
   window: {
     backgroundTextStyle: 'light',
-    navigationBarBackgroundColor: '#F7F5F2',
+    navigationBarBackgroundColor: '#F2F2F7',
     navigationBarTitleText: 'JMusic',
-    navigationBarTextStyle: 'black'
+    navigationBarTextStyle: 'black',
+    backgroundColor: '#F2F2F7'
   },
-  // 按需注入：仅注入当前页面所需的自定义组件与页面代码
-  // https://developers.weixin.qq.com/miniprogram/dev/framework/ability/lazyload.html
   lazyCodeLoading: 'requiredComponents',
-  // 后台音频播放能力声明
   requiredBackgroundModes: ['audio']
 })
 

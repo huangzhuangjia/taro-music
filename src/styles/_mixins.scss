@@ -8,16 +8,12 @@
 
 @mixin pressable-row {
   transition: background $jm-duration-normal $jm-ease-out;
-
-  &:active {
-    background: $jm-color-primary-soft;
-  }
+  &:active { background: $jm-color-surface-inset; }
 }
 
 @mixin playing-row {
   background: $jm-color-primary-soft;
   position: relative;
-
   &::before {
     content: '\e6a9';
     font-family: iconfont;
@@ -28,10 +24,29 @@
     display: flex;
     align-items: center;
     color: $jm-color-primary;
-    font-size: 40rpx;
+    font-size: 36rpx;
   }
 }
 
 @mixin safe-area-bottom($extra: 0rpx) {
   padding-bottom: calc(#{$extra} + #{$jm-safe-bottom});
+}
+
+@mixin apple-artwork-shadow {
+  box-shadow: $jm-shadow-cover;
+  border-radius: $jm-radius-artwork;
+}
+
+@mixin pill-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 64rpx;
+  padding: 0 $jm-space-md;
+  border-radius: $jm-radius-pill;
+  background: $jm-color-primary;
+  color: $jm-color-text-inverse;
+  font-size: $jm-font-caption;
+  font-weight: 600;
+  &:active { opacity: 0.82; }
 }

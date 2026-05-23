@@ -5,30 +5,32 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  background: $jm-color-surface;
+  background: $jm-color-bg;
   display: flex;
   flex-direction: column;
 
   .recommend-banner {
     flex-shrink: 0;
-    width: 100%;
-    padding: $jm-space-md $jm-page-x 0;
+    margin: $jm-space-xs $jm-page-x 0;
+    padding: $jm-space-md;
     display: flex;
     box-sizing: border-box;
+    background: $jm-color-surface;
+    border-radius: $jm-radius-lg;
+    box-shadow: $jm-shadow-sm;
 
     .cover {
-      width: 38vw;
-      height: 38vw;
+      width: 36vw;
+      height: 36vw;
       flex-shrink: 0;
       position: relative;
-      border-radius: $jm-radius-md;
+      @include apple-artwork-shadow;
       overflow: hidden;
-      box-shadow: $jm-shadow-cover;
 
       .list-tag {
         position: absolute;
-        right: $jm-space-xs;
-        bottom: $jm-space-xs;
+        right: $jm-space-2xs;
+        bottom: $jm-space-2xs;
         padding: 4rpx 12rpx;
         font-size: $jm-font-micro;
         display: flex;
@@ -38,6 +40,7 @@
         color: $jm-color-text-inverse;
         line-height: 1.4;
         z-index: 2;
+        backdrop-filter: blur(8px);
 
         .iconfont {
           margin-right: 4rpx;
@@ -49,7 +52,7 @@
         display: block;
         width: 100%;
         height: 100%;
-        background: $jm-color-border;
+        background: $jm-color-surface-inset;
       }
     }
 
@@ -59,12 +62,13 @@
       padding-left: $jm-space-md;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
 
       .name {
-        font-size: $jm-font-display;
-        font-weight: 600;
-        line-height: 1.35;
+        font-size: $jm-font-title;
+        font-weight: 700;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
         color: $jm-color-text;
         overflow: hidden;
         display: -webkit-box;
@@ -75,7 +79,7 @@
       .desc {
         font-size: $jm-font-caption;
         color: $jm-color-text-secondary;
-        line-height: 1.5;
+        line-height: 1.45;
         margin-top: $jm-space-2xs;
         overflow: hidden;
         display: -webkit-box;
@@ -84,22 +88,9 @@
       }
 
       .play-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        height: 64rpx;
-        padding: 0 $jm-space-md;
+        @include pill-button;
         margin-top: $jm-space-sm;
-        background: $jm-color-primary;
-        color: $jm-color-text-inverse;
-        font-size: $jm-font-caption;
-        border-radius: $jm-radius-sm;
         align-self: flex-start;
-        transition: background $jm-duration-normal $jm-ease-out;
-
-        &:active {
-          background: $jm-color-primary-dark;
-        }
 
         .iconfont {
           margin-right: 8rpx;
@@ -114,24 +105,30 @@
     width: 100%;
     height: 0;
     min-height: 0;
-    margin-top: $jm-space-xs;
-    padding-bottom: $jm-list-bottom;
+    margin-top: $jm-space-sm;
+    padding: 0 $jm-page-x $jm-list-bottom;
     box-sizing: border-box;
 
     .album-itembox {
       @include pressable-row;
       width: 100%;
-      min-height: 120rpx;
-      padding: $jm-space-sm $jm-page-x;
+      min-height: 128rpx;
+      padding: $jm-space-sm;
+      margin-bottom: $jm-space-2xs;
       display: flex;
       align-items: center;
+      background: $jm-color-surface;
+      border-radius: $jm-radius-md;
+      box-sizing: border-box;
 
       .cover {
-        width: 96rpx;
-        height: 96rpx;
+        width: 104rpx;
+        height: 104rpx;
         flex-shrink: 0;
         border-radius: $jm-radius-sm;
         overflow: hidden;
+        @include apple-artwork-shadow;
+        box-shadow: $jm-shadow-sm;
 
         image {
           display: block;
@@ -151,6 +148,7 @@
 
         .desc {
           font-size: $jm-font-body;
+          font-weight: 500;
           color: $jm-color-text;
           @include text-ellipsis;
         }
@@ -160,7 +158,7 @@
           color: $jm-color-text-secondary;
           display: flex;
           align-items: center;
-          margin-top: 4rpx;
+          margin-top: 6rpx;
 
           .iconfont {
             margin-right: 4rpx;
