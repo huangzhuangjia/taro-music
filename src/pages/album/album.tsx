@@ -71,15 +71,17 @@ class Album extends Component<AlbumProps, {}> {
         {
             albumList.map((data, k) => {
               return (
-                <View onClick={this.navigateTo.bind(this, `/pages/albumDetail/albumDetail?id=${data.id}`)} key={k}>
-                  <View className='album-itembox clearfix'>
-                    <View className='cover'>
-                      <Image src={data.picUrl} lazyLoad></Image>
-                    </View>
-                    <View className='info'>
-                      <View className='name'>{data.name}</View>
-                      <Text className='singer'>{data.singer}</Text>
-                    </View>
+                <View
+                  className='album-itembox'
+                  key={k}
+                  onClick={this.navigateTo.bind(this, `/pages/albumDetail/albumDetail?id=${data.id}`)}
+                >
+                  <View className='cover'>
+                    <Image src={data.picUrl} lazyLoad />
+                  </View>
+                  <View className='info'>
+                    <View className='name'>{data.name}</View>
+                    <Text className='singer'>{data.singer}</Text>
                   </View>
                 </View>
               )
@@ -87,7 +89,7 @@ class Album extends Component<AlbumProps, {}> {
           }
           {
             (albumList.length == total && albumList.length > 0) ?
-              <View className='loadingend'>已经到底了</View> : null
+              <View className='loadingend'>没有了~~</View> : null
           }
         </ScrollView>
       </View>
