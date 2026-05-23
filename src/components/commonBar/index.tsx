@@ -1,4 +1,5 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { connect } from 'react-redux'
 import shuffleArray from 'shuffle-array'
@@ -61,7 +62,7 @@ class CommonBar extends Component<CommonBarProps, CommonBarStates> {
   toUIPage() {
     this.props.onUpdateState('main', { UIPage: true })
   }
-  // 初始化播放器（currentSong 由 INITAUDIO 传入，避免 props 未刷新播上一首）
+  // 初始化播放器
   initAudio(payload: boolean | StoreState.InitAudioPayload) {
     const restore = typeof payload === 'boolean' ? payload : !!payload?.restore
     const currentSong =

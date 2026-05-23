@@ -1,4 +1,5 @@
-import Taro, { Component } from '@tarojs/taro'
+import { Component } from 'react'
+import Taro from '@tarojs/taro'
 import { View, Text, Image, Slider } from '@tarojs/components'
 import { connect } from 'react-redux'
 import eventEmitter from '../../utils/eventEmitter'
