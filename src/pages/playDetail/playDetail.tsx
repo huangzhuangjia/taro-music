@@ -142,9 +142,12 @@ class PlayDetail extends Component<PlayDetailProps, PlayDetailStates> {
         <View className={`play-ui-page ${main.UIPage ? 'play-ui-page-show' : ''}`}>
           <Image className='play-ui-page-bg' src={coverUrl} mode='aspectFill' />
 
-          <View className='windowsHead'>
-            <View className='back iconfont icon-guanbi' onClick={this.goBack.bind(this)} />
-            <View className='dragbar' />
+          <View className='play-nav'>
+            <View className='play-nav__handle' onClick={this.goBack.bind(this)} />
+            <View
+              className='play-nav__dismiss iconfont icon-zuixiaohua'
+              onClick={this.goBack.bind(this)}
+            />
           </View>
 
           <View className='cover'>
